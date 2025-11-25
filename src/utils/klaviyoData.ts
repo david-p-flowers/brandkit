@@ -368,7 +368,7 @@ export const getKlaviyoData = (): BrandKitSchema => {
             "tags": ["Product messaging (one-liners)", "Entrepreneur (ENTR)"]
           }
         ],
-        "brandToneAndVoice": "One-liners should be concise, outcome-focused, and immediately convey value. Use active voice. Lead with the benefit or transformation, not the feature. Avoid jargon. Make it memorable and repeatable. Typically 15-25 words maximum.",
+        "brandToneAndVoice": "# Product One-Liner Template\n\n## Structure\n\n[Product/Feature] [action verb] [outcome/benefit] - [key differentiator or how].\n\n## Guidelines\n\n- Keep to 15-25 words maximum\n- Lead with outcome or capability, not \"Klaviyo is...\"\n- Include 1-2 key differentiators\n- Use active voice\n- Make it memorable and repeatable\n\n## Example\n\nKlaviyo Marketing connects your data, AI, and channels - so you can deliver 1:1 personalization that drives ROI with speed and simplicity.",
         "contentTypeRules": [
           {
             "id": "ct-oneliner-001",
@@ -412,7 +412,7 @@ export const getKlaviyoData = (): BrandKitSchema => {
             "tags": ["Messaging pillars"]
           }
         ],
-        "brandToneAndVoice": "Messaging pillars should be parallel in structure, outcome-focused, and build a narrative. Use active verbs. Each pillar should be independently compelling but also work together to tell a complete story. Avoid feature lists - focus on capabilities and outcomes. Typically 3-5 pillars per framework.",
+        "brandToneAndVoice": "# Messaging Pillars Template\n\n## Structure\n\n• [Action verb] [outcome/capability] [context or differentiator]\n• [Action verb] [outcome/capability] [context or differentiator]\n• [Action verb] [outcome/capability] [context or differentiator]\n• [Action verb] [outcome/capability] [context or differentiator]\n\n## Guidelines\n\n- Use 3-5 pillars maximum\n- Parallel structure with active verbs\n- Each pillar should be independently compelling\n- Focus on capabilities and outcomes, not features\n- Build a narrative that works together\n\n## Example\n\n• Activate AI agents that learn, build, and engage\n• Create omnichannel experiences that work smarter together\n• Deliver 1:1 personalization, powered by built-in data\n• Simplify and scale your marketing",
         "contentTypeRules": [
           {
             "id": "ct-pillar-001",
@@ -462,7 +462,7 @@ export const getKlaviyoData = (): BrandKitSchema => {
             "tags": ["Use cases and proof points", "Entrepreneur (ENTR)"]
           }
         ],
-        "brandToneAndVoice": "Use cases should be specific, quantified when possible, and tell a story. Include the brand name, their challenge or goal, what they did with Klaviyo, and the measurable outcome. Customer quotes should feel authentic and reinforce key messages. Focus on metrics that matter (revenue, ROI, time saved, efficiency gains). Always use real customer names and real metrics—never fabricate.",
+        "brandToneAndVoice": "# Use Case Template\n\n## Structure\n\n### [Brand Name] - [Brief Challenge/Goal]\n\n[Brand name], a [location/industry]-based [business type], [challenge or goal]. [What they did with Klaviyo]. [Measurable outcome with specific metrics].\n\n**Customer Quote:**\n> \"[Authentic quote that reinforces key messages]\"\n\n## Guidelines\n\n- Include specific, quantified metrics (revenue lift, ROI, percentage improvements, time saved)\n- Tell a story: challenge → solution → outcome\n- Customer quotes should feel authentic, not marketing copy\n- Always use real customer names and real metrics—never fabricate\n- Connect use case to messaging pillars\n\n## Example\n\n### Adilsons - Faster Campaign Creation\n\nAdilsons, a Mauritius-based beauty brand, can send emails in minutes instead of hours with Marketing Agent.\n\n**Customer Quote:**\n> \"I'm sending out Marketing Agent campaigns that outperform the campaigns we used to create manually—50% better open rate, 51% better click rate, and 40% better attributed revenue per campaign.\"",
         "contentTypeRules": [
           {
             "id": "ct-usecase-001",
@@ -506,7 +506,7 @@ export const getKlaviyoData = (): BrandKitSchema => {
             "tags": ["Competitive messaging", "Mid-Market Plus (MM+)"]
           }
         ],
-        "brandToneAndVoice": "Competitive messaging should be confident but not aggressive. Focus on our unique value and customer benefits, not on tearing down competitors. Be specific about differences. Use 'while others..., Klaviyo...' construction. Acknowledge competitor strengths where appropriate to build credibility. Never name competitors in public-facing content unless in internal sales materials.",
+        "brandToneAndVoice": "# Competitive Messaging Template\n\n## Structure\n\nWhile [other platforms/competitors] [limitation or approach], Klaviyo [our unique value/approach] - [customer benefit].\n\n## Guidelines\n\n- Be confident but not aggressive\n- Focus on our unique value and customer benefits\n- Be specific about differences\n- Use \"while others..., Klaviyo...\" construction\n- Acknowledge competitor strengths where appropriate\n- Never name competitors in public-facing content (use \"other platforms\", \"traditional solutions\")\n\n## Example\n\nWhile other platforms require connecting with data warehouses or 3rd party CDPs and limit data retention to 30 days by default, Klaviyo provides a built-in CDP with unlimited data retention and lifetime profiles - no additional integration or costs.",
         "contentTypeRules": [
           {
             "id": "ct-comp-001",
@@ -550,7 +550,7 @@ export const getKlaviyoData = (): BrandKitSchema => {
             "tags": ["Product naming and taxonomy"]
           }
         ],
-        "brandToneAndVoice": "Product and brand names follow specific capitalization rules. Use full, proper names on first mention for clarity. Consistency in naming builds brand recognition and professionalism. Generic category terms use sentence case; branded products and features use Title Case.",
+        "brandToneAndVoice": "# Product Naming and Taxonomy Template\n\n## Capitalization Rules\n\n### Title Case (Branded Products & Features)\n- Klaviyo Marketing\n- Klaviyo Service\n- Klaviyo Analytics\n- Klaviyo Data Platform\n- K:AI\n- Customer Agent\n- Marketing Agent\n- Customer Hub\n- Klaviyo Email\n- Klaviyo SMS\n\n### Sentence Case (Generic Terms)\n- email marketing\n- SMS campaigns\n- customer data platform\n- marketing automation\n\n## Guidelines\n\n- Write out full product name on first mention: \"Klaviyo Email\", \"K:AI Marketing Agent\"\n- After first mention, shortened form acceptable: \"Email\", \"Marketing Agent\"\n- Never use \"Klaviyo's B2C CRM\" - use \"Klaviyo B2C CRM\" or \"the B2C CRM\"\n- Consistency in naming builds brand recognition\n- Generic category terms use sentence case; branded products use Title Case",
         "contentTypeRules": [
           {
             "id": "ct-naming-001",

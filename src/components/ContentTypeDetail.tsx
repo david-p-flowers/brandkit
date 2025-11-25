@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { ContentType, WritingRule, Sample } from '../types';
 import { AddSampleModal } from './AddSampleModal';
+import { MarkdownEditor } from './MarkdownEditor';
 
 interface Props {
   contentType: ContentType;
@@ -207,30 +208,12 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
               Add the ideal markdown structure for this content type.
             </p>
           </div>
-          <div className="rich-text-editor">
-            <div className="editor-toolbar">
-              <button type="button" className="toolbar-btn">Improve</button>
-              <div className="toolbar-divider"></div>
-              <button type="button" className="toolbar-btn">T+</button>
-              <button type="button" className="toolbar-btn"><strong>B</strong></button>
-              <button type="button" className="toolbar-btn"><em>I</em></button>
-              <button type="button" className="toolbar-btn">M</button>
-              <button type="button" className="toolbar-btn">A</button>
-              <button type="button" className="toolbar-btn">🔗</button>
-              <button type="button" className="toolbar-btn">📷</button>
-              <button type="button" className="toolbar-btn">&lt;/&gt;</button>
-              <button type="button" className="toolbar-btn">•</button>
-              <button type="button" className="toolbar-btn">1.</button>
-              <button type="button" className="toolbar-btn">☑</button>
-            </div>
-            <textarea
-              value={contentType.brandToneAndVoice}
-              onChange={(e) => updateField('brandToneAndVoice', e.target.value)}
-              placeholder="Enter template outline..."
-              className="editor-content"
-              rows={20}
-            />
-          </div>
+          <MarkdownEditor
+            value={contentType.brandToneAndVoice}
+            onChange={(value) => updateField('brandToneAndVoice', value)}
+            placeholder="Enter template outline..."
+            rows={20}
+          />
         </div>
 
         <div className="detail-section">
