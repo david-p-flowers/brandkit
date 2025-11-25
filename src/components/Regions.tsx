@@ -39,11 +39,6 @@ export const Regions = ({ regions, onChange, onRegionClick, onDuplicateTagUpdate
     }, 0);
   };
 
-  const updateRegion = (index: number, region: Region) => {
-    const updated = [...regions];
-    updated[index] = region;
-    onChange(updated);
-  };
 
   const removeRegion = (index: number) => {
     onChange(regions.filter((_, i) => i !== index));

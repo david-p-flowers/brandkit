@@ -4,15 +4,14 @@ import { AddSampleModal } from './AddSampleModal';
 
 interface Props {
   contentType: ContentType;
-  index: number;
   onChange: (contentType: ContentType) => void;
   onBack: () => void;
   globalWritingRules: WritingRule[];
   allContentTypes: ContentType[];
 }
 
-export const ContentTypeDetail = ({ contentType, index, onChange, onBack, globalWritingRules, allContentTypes }: Props) => {
-  const [showGlobalRules, setShowGlobalRules] = useState(true);
+export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWritingRules, allContentTypes }: Props) => {
+  const [showGlobalRules, setShowGlobalRules] = useState(false);
   const [showAddSampleModal, setShowAddSampleModal] = useState(false);
   const previousContentTypeNameRef = useRef<string>(contentType.name || '');
 

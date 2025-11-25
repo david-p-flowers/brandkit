@@ -4,13 +4,12 @@ import { AddCompetitorModal } from './AddCompetitorModal';
 
 interface Props {
   productLine: ProductLine;
-  index: number;
   onChange: (productLine: ProductLine) => void;
   onBack: () => void;
   regions: Region[];
 }
 
-export const ProductDetail = ({ productLine, index, onChange, onBack, regions }: Props) => {
+export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props) => {
   const [showAddCompetitorModal, setShowAddCompetitorModal] = useState(false);
 
   const updateField = (field: keyof ProductLine, value: any) => {

@@ -45,11 +45,6 @@ export const ContentTypes = ({ contentTypes, onChange, onContentTypeClick, onDup
     }, 0);
   };
 
-  const updateContentType = (index: number, contentType: ContentType) => {
-    const updated = [...contentTypes];
-    updated[index] = contentType;
-    onChange(updated);
-  };
 
   const removeContentType = (index: number) => {
     onChange(contentTypes.filter((_, i) => i !== index));

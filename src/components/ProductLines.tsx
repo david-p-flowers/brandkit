@@ -32,11 +32,6 @@ export const ProductLines = ({ productLines, onChange, onProductClick, onDuplica
     }, 0);
   };
 
-  const updateProductLine = (index: number, productLine: ProductLine) => {
-    const updated = [...productLines];
-    updated[index] = productLine;
-    onChange(updated);
-  };
 
   const removeProductLine = (index: number) => {
     onChange(productLines.filter((_, i) => i !== index));

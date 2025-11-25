@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritingRules, allAudiences, allContentTypes, allRegions, onUpdateGlobalRules }: Props) => {
-  const [showGlobalRules, setShowGlobalRules] = useState(true);
+  const [showGlobalRules, setShowGlobalRules] = useState(false);
   const [showAddRuleModal, setShowAddRuleModal] = useState(false);
   const previousAudienceNameRef = useRef<string>(audience.name || '');
 

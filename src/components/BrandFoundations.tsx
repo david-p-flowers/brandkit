@@ -14,7 +14,6 @@ interface Props {
 }
 
 export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regions }: Props) => {
-  const [selectedStorySection, setSelectedStorySection] = useState('brand-story-purpose');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import type { BrandKitSchema, ProductLine, WritingRule } from './types';
+import type { BrandKitSchema, ProductLine } from './types';
 import { saveToLocalStorage, loadFromLocalStorage, getEmptySchema, clearLocalStorage } from './utils/storage';
 import { getKlaviyoData } from './utils/klaviyoData';
 import { getXeroData } from './utils/xeroData';
@@ -248,7 +248,6 @@ function App() {
         <main className="main-content">
           <ProductDetail
             productLine={data.productLines[selectedProductIndex]}
-            index={selectedProductIndex}
             onChange={handleProductChange}
             onBack={() => setSelectedProductIndex(null)}
             regions={data.regions}
@@ -310,7 +309,6 @@ function App() {
         <main className="main-content">
           <ContentTypeDetail
             contentType={data.contentTypes[selectedContentTypeIndex]}
-            index={selectedContentTypeIndex}
             onChange={handleContentTypeChange}
             onBack={() => setSelectedContentTypeIndex(null)}
             globalWritingRules={data.brandFoundations.writingRules}
@@ -340,7 +338,6 @@ function App() {
         <main className="main-content">
           <RegionDetail
             region={data.regions[selectedRegionIndex]}
-            index={selectedRegionIndex}
             onChange={handleRegionChange}
             onBack={() => setSelectedRegionIndex(null)}
             globalWritingRules={data.brandFoundations.writingRules}

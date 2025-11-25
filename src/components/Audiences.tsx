@@ -8,6 +8,7 @@ interface Props {
   audiences: Audience[];
   onChange: (audiences: Audience[]) => void;
   onAudienceClick: (index: number) => void;
+  onDuplicateTagUpdate: (originalName: string, newName: string) => void;
 }
 
 const getInitialLetter = (name: string): string => {
@@ -44,11 +45,6 @@ export const Audiences = ({ audiences, onChange, onAudienceClick, onDuplicateTag
     }, 0);
   };
 
-  const updateAudience = (index: number, audience: Audience) => {
-    const updated = [...audiences];
-    updated[index] = audience;
-    onChange(updated);
-  };
 
   const removeAudience = (index: number) => {
     onChange(audiences.filter((_, i) => i !== index));

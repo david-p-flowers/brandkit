@@ -14,14 +14,14 @@ export const loadFromLocalStorage = (): BrandKitSchema | null => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      const parsed = JSON.parse(stored) as BrandKitSchema;
+      const parsed = JSON.parse(stored) as any;
       
       // Ensure backward compatibility - add missing brandStoryAndPurpose field if it doesn't exist
       if (parsed.brandFoundations && !('brandStoryAndPurpose' in parsed.brandFoundations)) {
         parsed.brandFoundations.brandStoryAndPurpose = '';
       }
       
-      return parsed;
+      return parsed as BrandKitSchema;
     }
   } catch (error) {
     console.error('Error loading from localStorage:', error);

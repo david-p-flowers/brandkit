@@ -3,14 +3,13 @@ import type { Region, WritingRule } from '../types';
 
 interface Props {
   region: Region;
-  index: number;
   onChange: (region: Region) => void;
   onBack: () => void;
   globalWritingRules: WritingRule[];
 }
 
-export const RegionDetail = ({ region, index, onChange, onBack, globalWritingRules }: Props) => {
-  const [showGlobalRules, setShowGlobalRules] = useState(true);
+export const RegionDetail = ({ region, onChange, onBack, globalWritingRules }: Props) => {
+  const [showGlobalRules, setShowGlobalRules] = useState(false);
   const previousRegionNameRef = useRef<string>(region.name || '');
 
   const updateField = (field: keyof Region, value: any) => {
