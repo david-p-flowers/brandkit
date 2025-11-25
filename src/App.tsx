@@ -44,17 +44,15 @@ function App() {
     if (version === 'Klaviyo') {
       const klaviyoData = getKlaviyoData();
       setData(klaviyoData);
-      // Save to localStorage with version key
+      // Save version preference but don't save the data (it's always loaded fresh)
       localStorage.setItem('brand-kit-version', version);
-      saveToLocalStorage(klaviyoData);
     } else if (version === 'Xero') {
       const xeroData = getXeroData();
       setData(xeroData);
-      // Save to localStorage with version key
+      // Save version preference but don't save the data (it's always loaded fresh)
       localStorage.setItem('brand-kit-version', version);
-      saveToLocalStorage(xeroData);
     } else {
-      // Load default/empty schema
+      // Default version: load from localStorage (user's custom data)
       const loaded = loadFromLocalStorage();
       if (loaded) {
         setData(loaded);
@@ -159,10 +157,16 @@ function App() {
     isInitialMount.current = false;
   }, []);
 
-  // Auto-save to localStorage whenever data changes
+  // Auto-save to localStorage whenever data changes (only for Default version)
   useEffect(() => {
     // Skip save on initial mount
     if (isInitialMount.current) {
+      return;
+    }
+
+    // Only save to localStorage if we're on the Default version (user's custom data)
+    // Xero and Klaviyo data should never be saved to localStorage
+    if (selectedVersion !== 'Default') {
       return;
     }
 
@@ -174,7 +178,7 @@ function App() {
     }, 500); // Debounce saves
     
     return () => clearTimeout(timer);
-  }, [data]);
+  }, [data, selectedVersion]);
 
   const renderActiveTab = () => {
     switch (activeTab) {
