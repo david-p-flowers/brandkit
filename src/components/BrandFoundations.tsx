@@ -11,9 +11,10 @@ interface Props {
   audiences: Audience[];
   contentTypes: ContentType[];
   regions: Region[];
+  onViewAllRules?: () => void;
 }
 
-export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regions }: Props) => {
+export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regions, onViewAllRules }: Props) => {
   const [showAddRuleModal, setShowAddRuleModal] = useState(false);
   const [editingRuleIndex, setEditingRuleIndex] = useState<number | null>(null);
   const [deleteRuleIndex, setDeleteRuleIndex] = useState<number | null>(null);
@@ -206,7 +207,7 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
               </div>
             </div>
             <div className="rules-table-footer">
-              <button type="button" className="btn-view-all-rules">
+              <button type="button" className="btn-view-all-rules" onClick={onViewAllRules}>
                 View all rules
               </button>
             </div>

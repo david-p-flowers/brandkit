@@ -12,9 +12,10 @@ interface Props {
   allContentTypes: any[];
   allRegions: any[];
   onUpdateGlobalRules?: (rules: WritingRule[]) => void;
+  onViewAllRules?: () => void;
 }
 
-export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritingRules, allAudiences, allContentTypes, allRegions, onUpdateGlobalRules }: Props) => {
+export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritingRules, allAudiences, allContentTypes, allRegions, onUpdateGlobalRules, onViewAllRules }: Props) => {
   const [showGlobalRules, setShowGlobalRules] = useState(false);
   const [showAddRuleModal, setShowAddRuleModal] = useState(false);
   const previousAudienceNameRef = useRef<string>(audience.name || '');
@@ -220,7 +221,7 @@ export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritin
                 })}
               </div>
               <div className="rules-table-footer">
-                <button type="button" className="btn-view-all-rules">
+                <button type="button" className="btn-view-all-rules" onClick={onViewAllRules}>
                   View all rules
                 </button>
               </div>

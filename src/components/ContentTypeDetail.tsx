@@ -9,9 +9,10 @@ interface Props {
   onBack: () => void;
   globalWritingRules: WritingRule[];
   allContentTypes: ContentType[];
+  onViewAllRules?: () => void;
 }
 
-export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWritingRules, allContentTypes }: Props) => {
+export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWritingRules, allContentTypes, onViewAllRules }: Props) => {
   const [showGlobalRules, setShowGlobalRules] = useState(false);
   const [showAddSampleModal, setShowAddSampleModal] = useState(false);
   const previousContentTypeNameRef = useRef<string>(contentType.name || '');
@@ -299,7 +300,7 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
                 })}
               </div>
               <div className="rules-table-footer">
-                <button type="button" className="btn-view-all-rules">
+                <button type="button" className="btn-view-all-rules" onClick={onViewAllRules}>
                   View all rules
                 </button>
               </div>

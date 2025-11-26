@@ -14,6 +14,7 @@ import { Audiences } from './components/Audiences';
 import { AudienceDetail } from './components/AudienceDetail';
 import { Regions } from './components/Regions';
 import { RegionDetail } from './components/RegionDetail';
+import { AllWritingRules } from './components/AllWritingRules';
 import './App.css';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
   const [selectedContentTypeIndex, setSelectedContentTypeIndex] = useState<number | null>(null);
   const [selectedRegionIndex, setSelectedRegionIndex] = useState<number | null>(null);
   const [selectedVersion, setSelectedVersion] = useState<string>('Default');
+  const [showAllWritingRules, setShowAllWritingRules] = useState(false);
   const isInitialMount = useRef(true);
 
   const handleClearStorage = () => {
@@ -190,6 +192,7 @@ function App() {
             audiences={data.audiences}
             contentTypes={data.contentTypes}
             regions={data.regions}
+            onViewAllRules={() => setShowAllWritingRules(true)}
           />
         );
       case 'product-lines':
@@ -232,6 +235,27 @@ function App() {
         return null;
     }
   };
+
+  // If showing all writing rules, show the full-page view
+  if (showAllWritingRules) {
+    return (
+      <div className="app">
+        <Sidebar 
+          activeSection="brand-kit" 
+          onClearStorage={handleClearStorage}
+          selectedVersion={selectedVersion}
+          onVersionChange={handleVersionChange}
+        />
+        <main className="main-content">
+          <AllWritingRules
+            data={data}
+            onChange={setData}
+            onBack={() => setShowAllWritingRules(false)}
+          />
+        </main>
+      </div>
+    );
+  }
 
   // If a product is selected, show the full-page detail view
   if (selectedProductIndex !== null && activeTab === 'product-lines') {
@@ -288,6 +312,7 @@ function App() {
             allContentTypes={data.contentTypes}
             allRegions={data.regions}
             onUpdateGlobalRules={(rules) => setData({ ...data, brandFoundations: { ...data.brandFoundations, writingRules: rules } })}
+            onViewAllRules={() => setShowAllWritingRules(true)}
           />
         </main>
       </div>
@@ -317,6 +342,7 @@ function App() {
             onBack={() => setSelectedContentTypeIndex(null)}
             globalWritingRules={data.brandFoundations.writingRules}
             allContentTypes={data.contentTypes}
+            onViewAllRules={() => setShowAllWritingRules(true)}
           />
         </main>
       </div>
@@ -345,6 +371,7 @@ function App() {
             onChange={handleRegionChange}
             onBack={() => setSelectedRegionIndex(null)}
             globalWritingRules={data.brandFoundations.writingRules}
+            onViewAllRules={() => setShowAllWritingRules(true)}
           />
         </main>
       </div>

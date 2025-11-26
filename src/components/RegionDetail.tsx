@@ -6,9 +6,10 @@ interface Props {
   onChange: (region: Region) => void;
   onBack: () => void;
   globalWritingRules: WritingRule[];
+  onViewAllRules?: () => void;
 }
 
-export const RegionDetail = ({ region, onChange, onBack, globalWritingRules }: Props) => {
+export const RegionDetail = ({ region, onChange, onBack, globalWritingRules, onViewAllRules }: Props) => {
   const [showGlobalRules, setShowGlobalRules] = useState(false);
   const previousRegionNameRef = useRef<string>(region.name || '');
 
@@ -206,7 +207,7 @@ export const RegionDetail = ({ region, onChange, onBack, globalWritingRules }: P
                 })}
               </div>
               <div className="rules-table-footer">
-                <button type="button" className="btn-view-all-rules">
+                <button type="button" className="btn-view-all-rules" onClick={onViewAllRules}>
                   View all rules
                 </button>
               </div>
