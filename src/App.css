@@ -2395,6 +2395,27 @@ body {
   min-width: 0;
 }
 
+.competitor-name-with-favicon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.competitor-favicon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  object-fit: contain;
+  background: var(--color-bg-secondary);
+}
+
+.competitor-name-with-favicon .competitor-input {
+  flex: 1;
+  min-width: 0;
+}
+
 .competitor-col-region {
   display: flex;
   flex-wrap: wrap;

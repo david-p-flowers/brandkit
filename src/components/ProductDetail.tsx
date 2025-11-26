@@ -59,6 +59,16 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props)
     return name.charAt(0).toUpperCase();
   };
 
+  const getFaviconUrl = (domain: string): string => {
+    if (!domain) return '';
+    // Clean the domain (remove http://, https://, www.)
+    const cleanDomain = domain
+      .replace(/^https?:\/\//, '')
+      .replace(/^www\./, '')
+      .split('/')[0]; // Remove path if present
+    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(cleanDomain)}&sz=32`;
+  };
+
   return (
     <div className="product-detail">
       <div className="product-detail-header">
@@ -156,13 +166,26 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props)
               {productLine.competitors.map((competitor, compIndex) => (
                 <div key={compIndex} className="competitors-table-row">
                   <div className="competitor-col-name">
-                    <input
-                      type="text"
-                      value={competitor.name}
-                      onChange={(e) => updateCompetitor(compIndex, { ...competitor, name: e.target.value })}
-                      placeholder="Competitor name"
-                      className="competitor-input"
-                    />
+                    <div className="competitor-name-with-favicon">
+                      {competitor.domain && (
+                        <img
+                          src={getFaviconUrl(competitor.domain)}
+                          alt={`${competitor.name} favicon`}
+                          className="competitor-favicon"
+                          onError={(e) => {
+                            // Hide image if it fails to load
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      )}
+                      <input
+                        type="text"
+                        value={competitor.name}
+                        onChange={(e) => updateCompetitor(compIndex, { ...competitor, name: e.target.value })}
+                        placeholder="Competitor name"
+                        className="competitor-input"
+                      />
+                    </div>
                   </div>
                   <div className="competitor-col-domain">
                     <input
