@@ -17,6 +17,7 @@ import { AudienceDetail } from './components/AudienceDetail';
 import { Regions } from './components/Regions';
 import { RegionDetail } from './components/RegionDetail';
 import { AllWritingRules } from './components/AllWritingRules';
+import { ChevronDown } from 'lucide-react';
 import './App.css';
 
 function App() {
@@ -167,18 +168,33 @@ function App() {
     });
   };
 
-  // Load data from localStorage on mount
+  // Load data from URL parameter or localStorage on mount
   useEffect(() => {
-    const savedVersion = localStorage.getItem('brand-kit-version') || 'Default';
-    setSelectedVersion(savedVersion);
+    // Check URL parameter first
+    const params = new URLSearchParams(window.location.search);
+    const versionParam = params.get('version');
+    let versionToLoad: string;
     
-    if (savedVersion === 'Klaviyo') {
+    if (versionParam && ['Default', 'Klaviyo', 'Xero', 'Rippling'].includes(versionParam)) {
+      versionToLoad = versionParam;
+    } else {
+      // Fallback to localStorage if no URL param
+      versionToLoad = localStorage.getItem('brand-kit-version') || 'Default';
+    }
+    
+    setSelectedVersion(versionToLoad);
+    
+    if (versionToLoad === 'Klaviyo') {
       const klaviyoData = getKlaviyoData();
       setData(klaviyoData);
-    } else if (savedVersion === 'Xero') {
+    } else if (versionToLoad === 'Xero') {
       const xeroData = getXeroData();
       setData(xeroData);
+    } else if (versionToLoad === 'Rippling') {
+      const ripplingData = getRipplingData();
+      setData(ripplingData);
     } else {
+      // Default version: load from localStorage (user's custom data)
       const loaded = loadFromLocalStorage();
       if (loaded) {
         setData(loaded);
@@ -186,6 +202,53 @@ function App() {
     }
     isInitialMount.current = false;
   }, []);
+
+  // Listen for URL changes (back/forward buttons)
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const versionParam = params.get('version');
+      let versionToLoad: string;
+      
+      if (versionParam && ['Default', 'Klaviyo', 'Xero', 'Rippling'].includes(versionParam)) {
+        versionToLoad = versionParam;
+      } else {
+        versionToLoad = 'Default';
+      }
+      
+      if (versionToLoad !== selectedVersion) {
+        setSelectedVersion(versionToLoad);
+        
+        // Load the appropriate data
+        if (versionToLoad === 'Klaviyo') {
+          const klaviyoData = getKlaviyoData();
+          setData(klaviyoData);
+        } else if (versionToLoad === 'Xero') {
+          const xeroData = getXeroData();
+          setData(xeroData);
+        } else if (versionToLoad === 'Rippling') {
+          const ripplingData = getRipplingData();
+          setData(ripplingData);
+        } else {
+          const loaded = loadFromLocalStorage();
+          if (loaded) {
+            setData(loaded);
+          } else {
+            setData(getEmptySchema());
+          }
+        }
+        
+        // Reset detail views
+        setSelectedProductIndex(null);
+        setSelectedAudienceIndex(null);
+        setSelectedContentTypeIndex(null);
+        setSelectedRegionIndex(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [selectedVersion]);
 
   // Auto-save to localStorage whenever data changes (only for Default version)
   useEffect(() => {
@@ -206,6 +269,72 @@ function App() {
     
     return () => clearTimeout(timer);
   }, [data, selectedVersion]);
+
+  // Version Switcher Component
+  const VersionSwitcher = ({ selectedVersion, onVersionChange }: { selectedVersion: string; onVersionChange: (version: string) => void }) => {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const versions = ['Default', 'Klaviyo', 'Xero', 'Rippling'];
+
+    useEffect(() => {
+      if (!isDropdownOpen) return;
+
+      const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+          setIsDropdownOpen(false);
+        }
+      };
+
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [isDropdownOpen]);
+
+    return (
+      <div className="header-version-switcher" ref={dropdownRef}>
+        <button 
+          type="button"
+          className="header-version-switcher-button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDropdownOpen(!isDropdownOpen);
+          }}
+        >
+          <span>{selectedVersion}</span>
+          <ChevronDown size={14} className={`header-version-switcher-arrow ${isDropdownOpen ? 'open' : ''}`} />
+        </button>
+        {isDropdownOpen && (
+          <div 
+            className="header-version-switcher-dropdown"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {versions.map((version) => (
+              <button
+                key={version}
+                type="button"
+                className={`header-version-switcher-option ${version === selectedVersion ? 'active' : ''}`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onVersionChange(version);
+                  setIsDropdownOpen(false);
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                {version}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -423,6 +552,10 @@ function App() {
             onChange={handleRegionChange}
             onBack={() => setSelectedRegionIndex(null)}
             globalWritingRules={data.brandFoundations.writingRules}
+            allAudiences={data.audiences}
+            allContentTypes={data.contentTypes}
+            allRegions={data.regions}
+            onUpdateGlobalRules={(rules) => setData({ ...data, brandFoundations: { ...data.brandFoundations, writingRules: rules } })}
             onViewAllRules={() => setShowAllWritingRules(true)}
           />
         </main>
@@ -441,6 +574,10 @@ function App() {
       <main className="main-content">
         <div className="content-header">
           <h1>Brand Kit</h1>
+          <VersionSwitcher 
+            selectedVersion={selectedVersion} 
+            onVersionChange={handleVersionChange} 
+          />
         </div>
         <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="content-body">

@@ -1,16 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
-import type { Region, WritingRule } from '../types';
+import type { Region, WritingRule, Audience, ContentType } from '../types';
+import { AddRuleModal } from './AddRuleModal';
 
 interface Props {
   region: Region;
   onChange: (region: Region) => void;
   onBack: () => void;
   globalWritingRules: WritingRule[];
+  allAudiences: Audience[];
+  allContentTypes: ContentType[];
+  allRegions: Region[];
+  onUpdateGlobalRules?: (rules: WritingRule[]) => void;
   onViewAllRules?: () => void;
 }
 
-export const RegionDetail = ({ region, onChange, onBack, globalWritingRules, onViewAllRules }: Props) => {
+export const RegionDetail = ({ region, onChange, onBack, globalWritingRules, allAudiences, allContentTypes, allRegions, onUpdateGlobalRules, onViewAllRules }: Props) => {
   const [showGlobalRules, setShowGlobalRules] = useState(false);
+  const [showAddRuleModal, setShowAddRuleModal] = useState(false);
   const previousRegionNameRef = useRef<string>(region.name || '');
 
   const updateField = (field: keyof Region, value: any) => {
@@ -39,13 +45,21 @@ export const RegionDetail = ({ region, onChange, onBack, globalWritingRules, onV
   }, [region.name]);
 
   const addWritingRule = () => {
-    const newRule: WritingRule = {
-      id: Date.now().toString(),
-      name: '',
-      description: '',
-      tags: [region.name || 'Region'],
-    };
-    updateField('writingRules', [...region.writingRules, newRule]);
+    setShowAddRuleModal(true);
+  };
+
+  const handleSaveRule = (rule: WritingRule) => {
+    // If it's a global rule, add it to global rules and ensure toggle is on
+    if (rule.tags.includes('Global')) {
+      if (onUpdateGlobalRules) {
+        onUpdateGlobalRules([...globalWritingRules, rule]);
+      }
+      setShowGlobalRules(true);
+    } else {
+      // It's a region-specific rule, add it to this region's rules
+      updateField('writingRules', [...region.writingRules, rule]);
+    }
+    setShowAddRuleModal(false);
   };
 
   const updateWritingRule = (ruleIndex: number, rule: WritingRule) => {
@@ -219,6 +233,17 @@ export const RegionDetail = ({ region, onChange, onBack, globalWritingRules, onV
           )}
         </div>
       </div>
+
+      {showAddRuleModal && (
+        <AddRuleModal
+          audiences={allAudiences}
+          contentTypes={allContentTypes}
+          regions={allRegions}
+          context={region.name ? { type: 'region', name: region.name } : undefined}
+          onSave={handleSaveRule}
+          onCancel={() => setShowAddRuleModal(false)}
+        />
+      )}
     </div>
   );
 };

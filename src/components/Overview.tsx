@@ -83,12 +83,22 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
     const reader = new FileReader();
     reader.onload = (e) => {
       const dataUrl = e.target?.result as string;
-      if (dataUrl && data.brandFoundations) {
+      if (dataUrl) {
         // Update the brand foundations with the new image
+        // Initialize brandFoundations if it doesn't exist (for empty state)
+        const currentBrandFoundations = data.brandFoundations || {
+          brandName: '',
+          brandDomain: '',
+          aboutYourBrand: '',
+          brandStoryAndPurpose: '',
+          brandToneAndVoice: '',
+          writingRules: [],
+        };
+        
         onChange({
           ...data,
           brandFoundations: {
-            ...data.brandFoundations,
+            ...currentBrandFoundations,
             brandHeaderImage: dataUrl,
           },
         });
@@ -197,6 +207,10 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
               src={defaultHeaderImage}
               alt="Default header"
               className="overview-hero-image"
+              onError={(e) => {
+                console.error('Failed to load default header image:', defaultHeaderImage);
+                setImageError(true);
+              }}
             />
             {isHoveringImage && (
               <div className="overview-hero-image-overlay">
@@ -219,6 +233,13 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
             />
           </div>
           <div className="overview-hero-gradient-overlay"></div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{ display: 'none' }}
+          />
           <div className="overview-hero-content">
             <div className="overview-hero-left">
               <h1 className="overview-brand-name-large">
@@ -332,31 +353,20 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
                 <span className="overview-brand-word">Brand</span>
               )}
             </h1>
-          </div>
-          <div className="overview-hero-divider"></div>
-          <div className="overview-hero-right">
             {data.brandFoundations?.brandDomain && (
               <p className="overview-brand-domain">{data.brandFoundations.brandDomain}</p>
             )}
-            {data.brandFoundations?.aboutYourBrand ? (
-              <p className="overview-brand-description">
-                {data.brandFoundations.aboutYourBrand}
-              </p>
-            ) : (
-              <>
-                <p className="overview-brand-description">
-                  Welcome to your brand kit. This is where your brand story comes to life.
-                </p>
-                {onNavigateToTab && (
-                  <button
-                    type="button"
-                    className="btn-primary overview-create-brand-kit-button"
-                    onClick={() => onNavigateToTab('brand-foundations')}
-                  >
-                    Create brand kit
-                  </button>
-                )}
-              </>
+          </div>
+          <div className="overview-hero-divider"></div>
+          <div className="overview-hero-right">
+            {!data.brandFoundations?.brandName && onNavigateToTab && (
+              <button
+                type="button"
+                className="btn-primary overview-create-brand-kit-button"
+                onClick={() => onNavigateToTab('brand-foundations')}
+              >
+                Create brand kit
+              </button>
             )}
           </div>
         </div>
