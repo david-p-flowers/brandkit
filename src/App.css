@@ -4242,6 +4242,36 @@ body {
   margin: 0;
 }
 
+/* Responsive Typography - Large Desktop */
+@media (max-width: 1600px) {
+  .overview-brand-name-large {
+    font-size: 7rem;
+  }
+
+  .overview-section-title-large {
+    font-size: 4.5rem;
+  }
+
+  .overview-section-count-large {
+    font-size: 3rem;
+  }
+}
+
+/* Responsive Typography - Desktop */
+@media (max-width: 1400px) {
+  .overview-brand-name-large {
+    font-size: 6rem;
+  }
+
+  .overview-section-title-large {
+    font-size: 4rem;
+  }
+
+  .overview-section-count-large {
+    font-size: 2.75rem;
+  }
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .overview-hero-split,
@@ -4265,6 +4295,25 @@ body {
 
   .overview-section-title-large {
     font-size: 3.5rem;
+  }
+
+  .overview-section-count-large {
+    font-size: 2.5rem;
+  }
+}
+
+/* Responsive Typography - Tablet */
+@media (max-width: 900px) {
+  .overview-brand-name-large {
+    font-size: 4rem;
+  }
+
+  .overview-section-title-large {
+    font-size: 2.75rem;
+  }
+
+  .overview-section-count-large {
+    font-size: 2rem;
   }
 }
 
@@ -4295,7 +4344,7 @@ body {
   }
 
   .overview-section-count-large {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .overview-rule-text {
@@ -4319,6 +4368,35 @@ body {
   }
 
   .overview-entity-name-large {
+    font-size: 1.5rem;
+  }
+}
+
+/* Responsive Typography - Mobile */
+@media (max-width: 640px) {
+  .overview-brand-name-large {
+    font-size: 3rem;
+  }
+
+  .overview-section-title-large {
+    font-size: 2rem;
+  }
+
+  .overview-section-count-large {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .overview-brand-name-large {
+    font-size: 2.5rem;
+  }
+
+  .overview-section-title-large {
+    font-size: 1.75rem;
+  }
+
+  .overview-section-count-large {
     font-size: 1.5rem;
   }
 }
