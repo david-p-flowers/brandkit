@@ -102,7 +102,11 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
     ? `rgba(${parseInt(contentType.color.slice(1, 3), 16)}, ${parseInt(contentType.color.slice(3, 5), 16)}, ${parseInt(contentType.color.slice(5, 7), 16)}, 0.1)`
     : 'rgba(0, 178, 133, 0.1)';
   
-  const IconComponent = (LucideIcons as any)[contentTypeIcon] || LucideIcons.FileText;
+  // Check if it's an emoji
+  const isEmoji = contentTypeIcon.length === 1 && /\p{Emoji}/u.test(contentTypeIcon);
+  const IconComponent = isEmoji 
+    ? null 
+    : ((LucideIcons as any)[contentTypeIcon] || LucideIcons.FileText);
   
   const handleIconChange = (icon: string) => {
     updateField('icon', icon);
@@ -135,7 +139,11 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
             onClick={() => setShowIconColorPicker(true)}
             style={{ backgroundColor: iconColorBg, color: contentTypeColor }}
           >
-            <IconComponent size={24} />
+            {isEmoji ? (
+              <span style={{ fontSize: '24px' }}>{contentTypeIcon}</span>
+            ) : (
+              <IconComponent size={24} />
+            )}
           </button>
           <input
             type="text"

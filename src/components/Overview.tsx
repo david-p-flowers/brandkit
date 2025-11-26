@@ -181,16 +181,53 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
   const accentColor = brandColors?.accent || '#6e6eff';
 
   if (!data || !data.brandFoundations) {
+    // Default header image for empty state
+    const defaultHeaderImage = 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=2000&h=600&fit=crop&q=80';
+    
     return (
       <div className="overview">
-        <div className="overview-hero-split overview-section-00 has-default-background">
-          <div className="overview-hero-default-background"></div>
-          <div className="overview-hero-content overview-hero-content-fullwidth">
-            <div className="overview-hero-center">
+        {/* Empty state header image section */}
+        <div className="overview-hero-split overview-section-00 has-background-image">
+          <div 
+            className="overview-hero-background-image"
+            onMouseEnter={() => setIsHoveringImage(true)}
+            onMouseLeave={() => setIsHoveringImage(false)}
+          >
+            <img
+              src={defaultHeaderImage}
+              alt="Default header"
+              className="overview-hero-image"
+            />
+            {isHoveringImage && (
+              <div className="overview-hero-image-overlay">
+                <button
+                  type="button"
+                  className="overview-hero-image-upload-btn"
+                  onClick={handleImageClick}
+                  title="Change cover"
+                >
+                  Change cover
+                </button>
+              </div>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+            />
+          </div>
+          <div className="overview-hero-gradient-overlay"></div>
+          <div className="overview-hero-content">
+            <div className="overview-hero-left">
               <h1 className="overview-brand-name-large">
                 <span className="overview-brand-word">Your</span>
                 <span className="overview-brand-word">Brand</span>
               </h1>
+            </div>
+            <div className="overview-hero-divider"></div>
+            <div className="overview-hero-right">
               <p className="overview-brand-description">
                 Welcome to your brand kit. This is where your brand story comes to life.
               </p>
