@@ -8,6 +8,7 @@ export interface WritingRule {
 export interface BrandFoundations {
   brandName: string;
   brandDomain: string;
+  brandIcon?: string; // URL or icon name
   aboutYourBrand: string;
   brandStoryAndPurpose: string;
   brandToneAndVoice: string;
@@ -26,6 +27,8 @@ export interface ProductLine {
   keyDifferentiatorsAndPositioning: string;
   idealCustomers: string;
   competitors: Competitor[];
+  icon?: string;
+  color?: string;
 }
 
 export interface Sample {
@@ -40,18 +43,24 @@ export interface ContentType {
   samples: Sample[];
   brandToneAndVoice: string;
   contentTypeRules: WritingRule[];
+  icon?: string;
+  color?: string;
 }
 
 export interface Audience {
   name?: string;
   description: string;
   writingRules: WritingRule[];
+  icon?: string;
+  color?: string;
 }
 
 export interface Region {
   name?: string;
   description: string;
   writingRules: WritingRule[];
+  flag?: string; // Emoji flag or custom icon
+  color?: string; // Optional custom color
 }
 
 export interface Example {

@@ -4,6 +4,7 @@ interface TabNavigationProps {
 }
 
 const tabs = [
+  { id: 'overview', label: 'Overview' },
   { id: 'brand-foundations', label: 'Brand Foundations' },
   { id: 'product-lines', label: 'Product Lines' },
   { id: 'audiences', label: 'Audiences' },

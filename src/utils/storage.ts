@@ -33,6 +33,7 @@ export const getEmptySchema = (): BrandKitSchema => ({
   brandFoundations: {
     brandName: '',
     brandDomain: '',
+    brandIcon: undefined,
     aboutYourBrand: '',
     brandStoryAndPurpose: '',
     brandToneAndVoice: '',

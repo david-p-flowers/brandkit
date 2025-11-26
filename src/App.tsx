@@ -5,6 +5,7 @@ import { getKlaviyoData } from './utils/klaviyoData';
 import { getXeroData } from './utils/xeroData';
 import { Sidebar } from './components/Sidebar';
 import { TabNavigation } from './components/TabNavigation';
+import { Overview } from './components/Overview';
 import { BrandFoundations } from './components/BrandFoundations';
 import { ProductLines } from './components/ProductLines';
 import { ProductDetail } from './components/ProductDetail';
@@ -19,13 +20,24 @@ import './App.css';
 
 function App() {
   const [data, setData] = useState<BrandKitSchema>(getEmptySchema());
-  const [activeTab, setActiveTab] = useState('brand-foundations');
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [activeTab, setActiveTab] = useState('overview');
   const [selectedProductIndex, setSelectedProductIndex] = useState<number | null>(null);
   const [selectedAudienceIndex, setSelectedAudienceIndex] = useState<number | null>(null);
   const [selectedContentTypeIndex, setSelectedContentTypeIndex] = useState<number | null>(null);
   const [selectedRegionIndex, setSelectedRegionIndex] = useState<number | null>(null);
-  const [selectedVersion, setSelectedVersion] = useState<string>('Default');
+  // Get initial version from URL params or default to 'Default'
+  const getInitialVersion = (): string => {
+    const params = new URLSearchParams(window.location.search);
+    const versionParam = params.get('version');
+    if (versionParam && ['Default', 'Klaviyo', 'Xero'].includes(versionParam)) {
+      return versionParam;
+    }
+    // Fallback to localStorage if no URL param
+    const storedVersion = localStorage.getItem('brand-kit-version');
+    return storedVersion || 'Default';
+  };
+
+  const [selectedVersion, setSelectedVersion] = useState<string>(getInitialVersion());
   const [showAllWritingRules, setShowAllWritingRules] = useState(false);
   const isInitialMount = useRef(true);
 
@@ -36,13 +48,23 @@ function App() {
     setSelectedAudienceIndex(null);
     setSelectedContentTypeIndex(null);
     setSelectedRegionIndex(null);
-    setActiveTab('brand-foundations');
+    setActiveTab('overview');
     setSelectedVersion('Default');
     isInitialMount.current = true;
   };
 
   const handleVersionChange = (version: string) => {
     setSelectedVersion(version);
+    
+    // Update URL parameter
+    const url = new URL(window.location.href);
+    if (version === 'Default') {
+      url.searchParams.delete('version');
+    } else {
+      url.searchParams.set('version', version);
+    }
+    window.history.pushState({ version }, '', url.toString());
+    
     if (version === 'Klaviyo') {
       const klaviyoData = getKlaviyoData();
       setData(klaviyoData);
@@ -172,11 +194,8 @@ function App() {
       return;
     }
 
-    setSaveStatus('saving');
     const timer = setTimeout(() => {
       saveToLocalStorage(data);
-      setSaveStatus('saved');
-      setTimeout(() => setSaveStatus('idle'), 2000);
     }, 500); // Debounce saves
     
     return () => clearTimeout(timer);
@@ -184,6 +203,32 @@ function App() {
 
   const renderActiveTab = () => {
     switch (activeTab) {
+      case 'overview':
+        return (
+          <Overview
+            data={data}
+            onChange={setData}
+            onProductClick={(index) => {
+              setSelectedProductIndex(index);
+              setActiveTab('product-lines');
+            }}
+            onContentTypeClick={(index) => {
+              setSelectedContentTypeIndex(index);
+              setActiveTab('content-types');
+            }}
+            onAudienceClick={(index) => {
+              setSelectedAudienceIndex(index);
+              setActiveTab('audiences');
+            }}
+            onRegionClick={(index) => {
+              setSelectedRegionIndex(index);
+              setActiveTab('regions');
+            }}
+            onNavigateToTab={(tab) => {
+              setActiveTab(tab);
+            }}
+          />
+        );
       case 'brand-foundations':
         return (
           <BrandFoundations
@@ -389,12 +434,6 @@ function App() {
       <main className="main-content">
         <div className="content-header">
           <h1>Brand Kit</h1>
-          <div className="header-actions">
-            <div className="save-status">
-              {saveStatus === 'saving' && <span className="status-saving">Saving...</span>}
-              {saveStatus === 'saved' && <span className="status-saved">✓ Saved</span>}
-            </div>
-          </div>
         </div>
         <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="content-body">

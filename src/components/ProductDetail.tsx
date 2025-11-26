@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { ProductLine, Competitor, Region } from '../types';
 import { AddCompetitorModal } from './AddCompetitorModal';
+import { IconColorPicker } from './IconColorPicker';
+import * as LucideIcons from 'lucide-react';
 
 interface Props {
   productLine: ProductLine;
@@ -11,6 +13,7 @@ interface Props {
 
 export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props) => {
   const [showAddCompetitorModal, setShowAddCompetitorModal] = useState(false);
+  const [showIconColorPicker, setShowIconColorPicker] = useState(false);
 
   const updateField = (field: keyof ProductLine, value: any) => {
     onChange({ ...productLine, [field]: value });
@@ -59,6 +62,25 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props)
     return name.charAt(0).toUpperCase();
   };
 
+  const defaultIcon = 'Package';
+  const defaultColor = '#6e6eff';
+  
+  const productIcon = productLine.icon || defaultIcon;
+  const productColor = productLine.color || defaultColor;
+  const iconColorBg = productLine.color 
+    ? `rgba(${parseInt(productLine.color.slice(1, 3), 16)}, ${parseInt(productLine.color.slice(3, 5), 16)}, ${parseInt(productLine.color.slice(5, 7), 16)}, 0.1)`
+    : 'rgba(110, 110, 255, 0.1)';
+  
+  const IconComponent = (LucideIcons as any)[productIcon] || LucideIcons.Package;
+  
+  const handleIconChange = (icon: string) => {
+    updateField('icon', icon);
+  };
+
+  const handleColorChange = (color: string) => {
+    updateField('color', color);
+  };
+
   const getFaviconUrl = (domain: string): string => {
     if (!domain) return '';
     // Clean the domain (remove http://, https://, www.)
@@ -81,9 +103,14 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props)
           <button type="button" onClick={onBack} className="btn-back">
             ←
           </button>
-          <div className="product-icon-large">
-            <div className="icon-placeholder-large">{getInitialLetter(productLine.name || '?')}</div>
-          </div>
+          <button
+            type="button"
+            className="product-icon-large-button"
+            onClick={() => setShowIconColorPicker(true)}
+            style={{ backgroundColor: iconColorBg, color: productColor }}
+          >
+            <IconComponent size={24} />
+          </button>
           <input
             type="text"
             value={productLine.name || ''}
@@ -249,6 +276,16 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props)
           regions={regions}
           onSave={addCompetitor}
           onCancel={() => setShowAddCompetitorModal(false)}
+        />
+      )}
+
+      {showIconColorPicker && (
+        <IconColorPicker
+          currentIcon={productIcon}
+          currentColor={productColor}
+          onIconChange={handleIconChange}
+          onColorChange={handleColorChange}
+          onClose={() => setShowIconColorPicker(false)}
         />
       )}
     </div>

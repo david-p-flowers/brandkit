@@ -3,6 +3,8 @@ import type { ProductLine } from '../types';
 import { CardMenu } from './CardMenu';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { AddProductLineModal } from './AddProductLineModal';
+import { Package } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 
 interface Props {
   productLines: ProductLine[];
@@ -64,12 +66,21 @@ export const ProductLines = ({ productLines, onChange, onProductClick, onDuplica
     }
   };
 
-  const getInitialLetter = (name: string): string => {
-    if (!name) return '?';
-    return name.charAt(0).toUpperCase();
+  const getProductIcon = (product: ProductLine) => {
+    const defaultIcon = 'Package';
+    const productIcon = product.icon || defaultIcon;
+    const IconComponent = (LucideIcons as any)[productIcon] || LucideIcons.Package;
+    return IconComponent;
   };
 
-  const getIconColor = (index: number): { bg: string; text: string } => {
+  const getProductColor = (product: ProductLine, index: number): { bg: string; text: string } => {
+    if (product.color) {
+      const color = product.color;
+      const bg = `rgba(${parseInt(color.slice(1, 3), 16)}, ${parseInt(color.slice(3, 5), 16)}, ${parseInt(color.slice(5, 7), 16)}, 0.1)`;
+      return { bg, text: color };
+    }
+    
+    // Default colors if no color is set
     const colors = [
       { bg: 'rgba(111, 77, 227, 0.1)', text: '#6f4de3' }, // purple
       { bg: 'rgba(14, 159, 72, 0.1)', text: '#0e9f48' }, // green
@@ -99,8 +110,8 @@ export const ProductLines = ({ productLines, onChange, onProductClick, onDuplica
       {productLines.length > 0 ? (
         <div className="product-cards">
           {productLines.map((productLine, index) => {
-            const iconColor = getIconColor(index);
-            const initial = getInitialLetter(productLine.name || '?');
+            const iconColor = getProductColor(productLine, index);
+            const IconComponent = getProductIcon(productLine);
             
             return (
               <div 
@@ -110,7 +121,7 @@ export const ProductLines = ({ productLines, onChange, onProductClick, onDuplica
                 style={{ cursor: 'pointer' }}
               >
                 <div className="card-icon" style={{ backgroundColor: iconColor.bg, color: iconColor.text }}>
-                  {initial}
+                  <IconComponent size={20} />
                 </div>
                 <div className="card-content">
                   <div className="card-title">

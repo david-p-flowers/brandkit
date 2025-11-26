@@ -115,6 +115,9 @@ export const AddRuleModal = ({ audiences, contentTypes, regions, initialRule, co
     if (isGlobal) {
       setIsGlobal(false);
     }
+    // Clear other tag types when selecting an audience
+    setSelectedContentTypes([]);
+    setSelectedRegions([]);
     setSelectedAudiences(prev =>
       prev.includes(name)
         ? prev.filter(n => n !== name)
@@ -126,6 +129,9 @@ export const AddRuleModal = ({ audiences, contentTypes, regions, initialRule, co
     if (isGlobal) {
       setIsGlobal(false);
     }
+    // Clear other tag types when selecting a content type
+    setSelectedAudiences([]);
+    setSelectedRegions([]);
     setSelectedContentTypes(prev =>
       prev.includes(name)
         ? prev.filter(n => n !== name)
@@ -137,6 +143,9 @@ export const AddRuleModal = ({ audiences, contentTypes, regions, initialRule, co
     if (isGlobal) {
       setIsGlobal(false);
     }
+    // Clear other tag types when selecting a region
+    setSelectedAudiences([]);
+    setSelectedContentTypes([]);
     setSelectedRegions(prev =>
       prev.includes(name)
         ? prev.filter(n => n !== name)

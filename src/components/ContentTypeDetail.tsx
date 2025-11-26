@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import type { ContentType, WritingRule, Sample } from '../types';
 import { AddSampleModal } from './AddSampleModal';
 import { MarkdownEditor } from './MarkdownEditor';
+import { IconColorPicker } from './IconColorPicker';
+import { X, FileText } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 
 interface Props {
   contentType: ContentType;
@@ -15,6 +18,7 @@ interface Props {
 export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWritingRules, allContentTypes, onViewAllRules }: Props) => {
   const [showGlobalRules, setShowGlobalRules] = useState(false);
   const [showAddSampleModal, setShowAddSampleModal] = useState(false);
+  const [showIconColorPicker, setShowIconColorPicker] = useState(false);
   const previousContentTypeNameRef = useRef<string>(contentType.name || '');
 
   const updateField = (field: keyof ContentType, value: any) => {
@@ -48,12 +52,12 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
     previousContentTypeNameRef.current = contentType.name || '';
   }, [contentType.name]);
 
-  const addSample = (name: string, url: string, tag: string) => {
+  const addSample = (name: string, url: string, content: string, type: 'url' | 'upload' | 'plain-text') => {
     const newSample: Sample = {
       title: name || '',
-      body: url,
-      notes: '',
-      tags: [tag],
+      body: type === 'url' ? url : type === 'plain-text' ? content : url,
+      notes: type === 'upload' ? content : '',
+      tags: [contentType.name || 'Content Type'],
     };
     updateField('samples', [...contentType.samples, newSample]);
     setShowAddSampleModal(false);
@@ -89,16 +93,24 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
     updateField('contentTypeRules', contentType.contentTypeRules.filter((_, i) => i !== ruleIndex));
   };
 
-  const getIconForContentType = (name: string): string => {
-    const lowerName = name.toLowerCase();
-    if (lowerName.includes('page')) return '📄';
-    if (lowerName.includes('product')) return '📦';
-    if (lowerName.includes('pillar')) return '📚';
-    if (lowerName.includes('list')) return '📋';
-    return '📝';
+  const defaultIcon = 'FileText';
+  const defaultColor = '#00b285';
+  
+  const contentTypeIcon = contentType.icon || defaultIcon;
+  const contentTypeColor = contentType.color || defaultColor;
+  const iconColorBg = contentType.color 
+    ? `rgba(${parseInt(contentType.color.slice(1, 3), 16)}, ${parseInt(contentType.color.slice(3, 5), 16)}, ${parseInt(contentType.color.slice(5, 7), 16)}, 0.1)`
+    : 'rgba(0, 178, 133, 0.1)';
+  
+  const IconComponent = (LucideIcons as any)[contentTypeIcon] || LucideIcons.FileText;
+  
+  const handleIconChange = (icon: string) => {
+    updateField('icon', icon);
   };
 
-  const icon = getIconForContentType(contentType.name || '');
+  const handleColorChange = (color: string) => {
+    updateField('color', color);
+  };
 
   // Combine content type rules with global rules if toggle is on
   const allRules = showGlobalRules 
@@ -117,9 +129,14 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
           <button type="button" onClick={onBack} className="btn-back">
             ←
           </button>
-          <div className="content-type-icon-large">
-            {icon}
-          </div>
+          <button
+            type="button"
+            className="content-type-icon-large-button"
+            onClick={() => setShowIconColorPicker(true)}
+            style={{ backgroundColor: iconColorBg, color: contentTypeColor }}
+          >
+            <IconComponent size={24} />
+          </button>
           <input
             type="text"
             value={contentType.name || ''}
@@ -144,56 +161,55 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
             </p>
           </div>
           {contentType.samples.length > 0 ? (
-            <div className="samples-table">
-              <div className="samples-table-header">
-                <div className="sample-col-url">Sample URL</div>
-                <div className="sample-col-tags">Tags</div>
-                <div className="sample-col-actions"></div>
-              </div>
-              {contentType.samples.map((sample, sampleIndex) => (
-                <div key={sampleIndex} className="samples-table-row">
-                  <div className="sample-col-url">
-                    <input
-                      type="text"
-                      value={sample.body}
-                      onChange={(e) => updateSample(sampleIndex, { ...sample, body: e.target.value })}
-                      placeholder="https://example.com"
-                      className="sample-input"
-                    />
-                  </div>
-                  <div className="sample-col-tags">
-                    <div className="tag-list">
-                      {(() => {
-                        // Always show the content type name as a tag
-                        const tagsToShow = sample.tags && sample.tags.length > 0 
-                          ? sample.tags.map(tag => {
-                              // If tag matches the content type name (current or previous), show current name
-                              return (tag === previousContentTypeNameRef.current || tag === contentType.name)
-                                ? (contentType.name || 'Content Type')
-                                : tag;
-                            })
-                          : [contentType.name || 'Content Type'];
-                        
-                        return tagsToShow.map((tag, tagIndex) => (
-                          <span key={tagIndex} className="tag-chip">
-                            {tag}
-                          </span>
-                        ));
-                      })()}
+            <div className="samples-grid">
+              {contentType.samples.map((sample, sampleIndex) => {
+                const getSampleIcon = () => {
+                  if (sample.notes && sample.notes.includes('upload')) {
+                    return '📄'; // File icon for uploads
+                  }
+                  if (sample.body && sample.body.startsWith('http')) {
+                    return '🔗'; // Link icon for URLs
+                  }
+                  return '📝'; // Text icon for plain text
+                };
+
+                const getSampleType = () => {
+                  if (sample.notes && sample.notes.includes('upload')) return 'Upload';
+                  if (sample.body && sample.body.startsWith('http')) return 'URL';
+                  return 'Plain Text';
+                };
+
+                return (
+                  <div key={sampleIndex} className="sample-card">
+                    <div className="sample-card-icon">{getSampleIcon()}</div>
+                    <div className="sample-card-content">
+                      <input
+                        type="text"
+                        value={sample.title || ''}
+                        onChange={(e) => updateSample(sampleIndex, { ...sample, title: e.target.value })}
+                        placeholder="Sample name"
+                        className="sample-card-name"
+                      />
+                      <input
+                        type="text"
+                        value={sample.body}
+                        onChange={(e) => updateSample(sampleIndex, { ...sample, body: e.target.value })}
+                        placeholder={getSampleType() === 'URL' ? 'https://example.com' : getSampleType() === 'Plain Text' ? 'Sample text...' : 'File name'}
+                        className="sample-card-url"
+                      />
+                      <div className="sample-card-type">{getSampleType()}</div>
                     </div>
-                  </div>
-                  <div className="sample-col-actions">
                     <button
                       type="button"
                       onClick={() => removeSample(sampleIndex)}
-                      className="btn-remove-sample"
+                      className="sample-card-remove"
                       title="Remove sample"
                     >
-                      ⋮
+                      <X size={16} />
                     </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="empty-state">
@@ -234,7 +250,7 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
                   <span className="toggle-label">Show Global Rules</span>
                 </div>
                 <button type="button" onClick={addWritingRule} className="btn-add-rule">
-                  + Add Guideline
+                  + Add Rule
                 </button>
               </div>
             </div>
@@ -319,6 +335,16 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
           contentTypes={allContentTypes}
           onSave={addSample}
           onCancel={() => setShowAddSampleModal(false)}
+        />
+      )}
+
+      {showIconColorPicker && (
+        <IconColorPicker
+          currentIcon={contentTypeIcon}
+          currentColor={contentTypeColor}
+          onIconChange={handleIconChange}
+          onColorChange={handleColorChange}
+          onClose={() => setShowIconColorPicker(false)}
         />
       )}
     </div>

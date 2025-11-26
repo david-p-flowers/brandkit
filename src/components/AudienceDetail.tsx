@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Audience, WritingRule } from '../types';
 import { AddRuleModal } from './AddRuleModal';
+import { IconColorPicker } from './IconColorPicker';
+import * as LucideIcons from 'lucide-react';
 
 interface Props {
   audience: Audience;
@@ -18,6 +20,7 @@ interface Props {
 export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritingRules, allAudiences, allContentTypes, allRegions, onUpdateGlobalRules, onViewAllRules }: Props) => {
   const [showGlobalRules, setShowGlobalRules] = useState(false);
   const [showAddRuleModal, setShowAddRuleModal] = useState(false);
+  const [showIconColorPicker, setShowIconColorPicker] = useState(false);
   const previousAudienceNameRef = useRef<string>(audience.name || '');
 
   const updateField = (field: keyof Audience, value: any) => {
@@ -88,8 +91,24 @@ export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritin
     return colors[index % colors.length];
   };
 
-  const iconColor = getIconColor(index);
-  const initial = getInitialLetter(audience.name || '?');
+  const defaultIconColor = getIconColor(index);
+  const defaultIcon = 'Users';
+  
+  const audienceIcon = audience.icon || defaultIcon;
+  const audienceColor = audience.color || defaultIconColor.text;
+  const iconColorBg = audience.color 
+    ? `rgba(${parseInt(audience.color.slice(1, 3), 16)}, ${parseInt(audience.color.slice(3, 5), 16)}, ${parseInt(audience.color.slice(5, 7), 16)}, 0.1)`
+    : defaultIconColor.bg;
+  
+  const IconComponent = (LucideIcons as any)[audienceIcon] || LucideIcons.Users;
+  
+  const handleIconChange = (icon: string) => {
+    updateField('icon', icon);
+  };
+
+  const handleColorChange = (color: string) => {
+    updateField('color', color);
+  };
 
   // Combine audience rules with global rules if toggle is on
   const allRules = showGlobalRules 
@@ -108,9 +127,14 @@ export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritin
           <button type="button" onClick={onBack} className="btn-back">
             ←
           </button>
-          <div className="audience-icon-large" style={{ backgroundColor: iconColor.bg, color: iconColor.text }}>
-            {initial}
-          </div>
+          <button
+            type="button"
+            className="audience-icon-large-button"
+            onClick={() => setShowIconColorPicker(true)}
+            style={{ backgroundColor: iconColorBg, color: audienceColor }}
+          >
+            <IconComponent size={24} />
+          </button>
           <input
             type="text"
             value={audience.name || ''}
@@ -242,6 +266,16 @@ export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritin
           context={audience.name ? { type: 'audience', name: audience.name } : undefined}
           onSave={handleSaveRule}
           onCancel={() => setShowAddRuleModal(false)}
+        />
+      )}
+
+      {showIconColorPicker && (
+        <IconColorPicker
+          currentIcon={audienceIcon}
+          currentColor={audienceColor}
+          onIconChange={handleIconChange}
+          onColorChange={handleColorChange}
+          onClose={() => setShowIconColorPicker(false)}
         />
       )}
     </div>
