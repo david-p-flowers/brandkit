@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { BrandKitSchema } from '../types';
 import { Package, FileText, Users, Globe, Sparkles, Pencil } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
@@ -15,7 +14,7 @@ interface Props {
   onNavigateToTab?: (tab: string) => void;
 }
 
-export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab }: Props) => {
+export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab }: Props) => {
 
   const getEntityIcon = (type: 'product' | 'contentType' | 'audience' | 'region', entity: any) => {
     if (type === 'product' && entity.icon) {

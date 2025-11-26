@@ -11,7 +11,7 @@ interface Props {
   onCancel: () => void;
 }
 
-export const AddSampleModal = ({ contentTypeName, contentTypes, onSave, onCancel }: Props) => {
+export const AddSampleModal = ({ onSave, onCancel }: Props) => {
   const [activeTab, setActiveTab] = useState<TabType>('url');
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');

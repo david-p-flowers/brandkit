@@ -3,7 +3,7 @@ import type { ContentType, WritingRule, Sample } from '../types';
 import { AddSampleModal } from './AddSampleModal';
 import { MarkdownEditor } from './MarkdownEditor';
 import { IconColorPicker } from './IconColorPicker';
-import { X, FileText } from 'lucide-react';
+import { X } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 
 interface Props {

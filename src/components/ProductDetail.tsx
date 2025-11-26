@@ -57,10 +57,6 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props)
     });
   };
 
-  const getInitialLetter = (name: string): string => {
-    if (!name) return '?';
-    return name.charAt(0).toUpperCase();
-  };
 
   const defaultIcon = 'Package';
   const defaultColor = '#6e6eff';

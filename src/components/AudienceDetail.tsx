@@ -76,10 +76,6 @@ export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritin
     updateField('writingRules', audience.writingRules.filter((_, i) => i !== ruleIndex));
   };
 
-  const getInitialLetter = (name: string): string => {
-    if (!name) return '?';
-    return name.charAt(0).toUpperCase();
-  };
 
   const getIconColor = (index: number): { bg: string; text: string } => {
     const colors = [

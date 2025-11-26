@@ -3,7 +3,6 @@ import type { ProductLine } from '../types';
 import { CardMenu } from './CardMenu';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { AddProductLineModal } from './AddProductLineModal';
-import { Package } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 
 interface Props {
