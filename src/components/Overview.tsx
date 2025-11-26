@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import type { BrandKitSchema } from '../types';
-import { Package, FileText, Users, Globe, Sparkles, Pencil } from 'lucide-react';
+import { Package, FileText, Users, Globe, Sparkles, Pencil, ChevronDown, ChevronUp } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -55,7 +56,11 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
   };
 
   // Get featured rules (first 3-5 global rules)
-  const featuredRules = (data?.brandFoundations?.writingRules || []).slice(0, 5);
+  const allFeaturedRules = (data?.brandFoundations?.writingRules || []).slice(0, 5);
+  const [showAllRules, setShowAllRules] = useState(false);
+  const INITIAL_RULES_COUNT = 3;
+  const featuredRules = showAllRules ? allFeaturedRules : allFeaturedRules.slice(0, INITIAL_RULES_COUNT);
+  const hasMoreRules = allFeaturedRules.length > INITIAL_RULES_COUNT;
   
   // Get brand colors
   const brandColors = data?.brandFoundations?.brandColors;
@@ -426,22 +431,45 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
           </div>
           <div className="overview-section-divider"></div>
           <div className="overview-section-right">
-            <div className="overview-rules-typography-large">
-              {featuredRules.map((rule, index) => (
-                <div key={rule.id || index} className="overview-rule-item-large">
-                  <div className="overview-rule-number-large">{String(index + 1).padStart(2, '0')}</div>
-                  <div className="overview-rule-content-large">
-                    <p className="overview-rule-text-large">{rule.description || rule.name}</p>
-                    {rule.tags && rule.tags.length > 0 && (
-                      <div className="overview-rule-tags-large">
-                        {rule.tags.map((tag, tagIndex) => (
-                          <span key={tagIndex} className="overview-rule-tag-large">{tag}</span>
-                        ))}
-                      </div>
-                    )}
+            <div className="overview-rules-container">
+              <div className="overview-rules-typography-large">
+                {featuredRules.map((rule, index) => (
+                  <div key={rule.id || index} className="overview-rule-item-large">
+                    <div className="overview-rule-number-large">{String(index + 1).padStart(2, '0')}</div>
+                    <div className="overview-rule-content-large">
+                      <p className="overview-rule-text-large">{rule.description || rule.name}</p>
+                      {rule.tags && rule.tags.length > 0 && (
+                        <div className="overview-rule-tags-large">
+                          {rule.tags.map((tag, tagIndex) => (
+                            <span key={tagIndex} className="overview-rule-tag-large">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              
+              {hasMoreRules && (
+                <button
+                  type="button"
+                  className="overview-rules-toggle"
+                  onClick={() => setShowAllRules(!showAllRules)}
+                >
+                  <span>{showAllRules ? 'Show less' : `Show ${allFeaturedRules.length - INITIAL_RULES_COUNT} more`}</span>
+                  {showAllRules ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+              )}
+              
+              {onNavigateToTab && (
+                <button
+                  type="button"
+                  className="overview-rules-view-all"
+                  onClick={() => onNavigateToTab('brand-foundations')}
+                >
+                  View all rules →
+                </button>
+              )}
             </div>
           </div>
         </div>
