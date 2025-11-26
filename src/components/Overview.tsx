@@ -483,6 +483,15 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
             <Sparkles size={64} />
             <h2>Welcome to your Brand Kit</h2>
             <p>Start building your brand by adding products, content types, audiences, and writing rules.</p>
+            {onNavigateToTab && (
+              <button
+                type="button"
+                className="overview-empty-state-button"
+                onClick={() => onNavigateToTab('brand-foundations')}
+              >
+                Create brand kit
+              </button>
+            )}
           </div>
         )}
     </div>

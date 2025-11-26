@@ -4466,6 +4466,25 @@ body {
   margin: 0;
 }
 
+.overview-empty-state-button {
+  padding: 12px 24px;
+  background: var(--color-button-primary-bg);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.overview-empty-state-button:hover {
+  background: #1f1f25;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Responsive Typography - Large Desktop */
 @media (max-width: 1600px) {
   .overview-brand-name-large {
