@@ -165,16 +165,10 @@ export const Audiences = ({ audiences, onChange, onAudienceClick, onDuplicateTag
           })}
         </div>
       ) : (
-        <div className="audience-cards">
-          <div className="empty-state-card audience-card" onClick={() => setShowAddModal(true)}>
-            <div className="card-icon" style={{ backgroundColor: 'rgba(9, 9, 11, 0.04)', color: 'var(--color-text-secondary)' }}>
-              👥
-            </div>
-            <div className="card-content">
-              <div className="card-title">Create Audience</div>
-              <div className="card-description">Add your first audience to get started</div>
-            </div>
-          </div>
+        <div className="empty-state-card" onClick={() => setShowAddModal(true)}>
+          <div className="empty-state-icon">👥</div>
+          <div className="empty-state-title">Create Audience</div>
+          <div className="empty-state-description">Add your first audience to get started</div>
         </div>
       )}
       {showAddModal && (

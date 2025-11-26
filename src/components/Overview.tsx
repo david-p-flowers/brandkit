@@ -233,13 +233,6 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
             />
           </div>
           <div className="overview-hero-gradient-overlay"></div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            style={{ display: 'none' }}
-          />
           <div className="overview-hero-content">
             <div className="overview-hero-left">
               <h1 className="overview-brand-name-large">
@@ -414,7 +407,7 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
                 }}
               >
                 <Pencil size={14} />
-                Edit
+                <span>Edit</span>
               </button>
             </div>
           </div>
@@ -463,7 +456,7 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
                 }}
               >
                 <Pencil size={14} />
-                Edit
+                <span>Edit</span>
               </button>
             </div>
           </div>
@@ -477,7 +470,6 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
             <div className="overview-section-number">03</div>
             <h2 className="overview-section-title-large">Products</h2>
             <div className="overview-section-meta">
-              <span className="overview-section-count-large">{data.productLines.length}</span>
               <div className="overview-section-label">Product Lines</div>
             </div>
           </div>
@@ -524,65 +516,20 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
         </div>
       )}
 
-      {/* Content Types & Audiences - Side by Side */}
-      {((data.contentTypes?.length || 0) > 0 || (data.audiences?.length || 0) > 0) && (
-        <div className="overview-section-split overview-section-04">
-          {(data.contentTypes?.length || 0) > 0 && (
-            <>
-              <div className="overview-section-left">
-                <div className="overview-section-number">04</div>
-                <h2 className="overview-section-title-large">Content</h2>
-                <h2 className="overview-section-title-large">Types</h2>
-                <div className="overview-section-meta">
-                  <span className="overview-section-count-large">{data.contentTypes.length}</span>
-                  <div className="overview-section-label">Content Types</div>
-                </div>
-              </div>
-              <div className="overview-section-divider"></div>
-              <div className="overview-section-right">
-                <div className="overview-entities-grid-compact">
-                  {data.contentTypes.slice(0, 6).map((contentType, index) => {
-                    const color = getEntityColor('contentType', contentType);
-                    const bgColor = `${color}1A`;
-                    return (
-                      <div
-                        key={index}
-                        className="overview-entity-card-compact"
-                        onClick={() => onContentTypeClick(index)}
-                        style={{
-                          '--entity-color': color,
-                          '--entity-bg': bgColor,
-                        } as React.CSSProperties}
-                      >
-                        <div className="overview-entity-icon-compact" style={{ backgroundColor: bgColor, color }}>
-                          {getEntityIcon('contentType', contentType)}
-                        </div>
-                        <h3 className="overview-entity-name-compact">{contentType.name || 'Unnamed Content Type'}</h3>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-      )}
-
       {/* Audiences - Full Width */}
       {(data.audiences?.length || 0) > 0 && (
-        <div className="overview-section-split overview-section-05">
+        <div className="overview-section-split overview-section-04">
           <div className="overview-section-left">
-            <div className="overview-section-number">05</div>
+            <div className="overview-section-number">04</div>
             <h2 className="overview-section-title-large">Audiences</h2>
             <div className="overview-section-meta">
-              <span className="overview-section-count-large">{data.audiences.length}</span>
-              <div className="overview-section-label">Audiences</div>
+              <div className="overview-section-label">Audience</div>
             </div>
           </div>
           <div className="overview-section-divider"></div>
           <div className="overview-section-right">
             <div className="overview-entities-grid-compact">
-              {data.audiences.slice(0, 6).map((audience, index) => {
+              {data.audiences.slice(0, 5).map((audience, index) => {
                 const color = getEntityColor('audience', audience);
                 const bgColor = `${color}1A`;
                 return (
@@ -602,6 +549,74 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
                   </div>
                 );
               })}
+              {data.audiences.length > 5 && (
+                <div
+                  className="overview-entity-card-compact overview-view-all-card"
+                  onClick={() => {
+                    if (onNavigateToTab) {
+                      onNavigateToTab('audiences');
+                    }
+                  }}
+                >
+                  <div className="overview-view-all-content">
+                    <span className="overview-view-all-text">View all audiences</span>
+                    <span className="overview-view-all-arrow">→</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Content Types */}
+      {(data.contentTypes?.length || 0) > 0 && (
+        <div className="overview-section-split overview-section-05">
+          <div className="overview-section-left">
+            <div className="overview-section-number">05</div>
+            <h2 className="overview-section-title-large">Content Types</h2>
+            <div className="overview-section-meta">
+              <div className="overview-section-label">Content Types</div>
+            </div>
+          </div>
+          <div className="overview-section-divider"></div>
+          <div className="overview-section-right">
+            <div className="overview-entities-grid-compact">
+              {data.contentTypes.slice(0, 5).map((contentType, index) => {
+                const color = getEntityColor('contentType', contentType);
+                const bgColor = `${color}1A`;
+                return (
+                  <div
+                    key={index}
+                    className="overview-entity-card-compact"
+                    onClick={() => onContentTypeClick(index)}
+                    style={{
+                      '--entity-color': color,
+                      '--entity-bg': bgColor,
+                    } as React.CSSProperties}
+                  >
+                    <div className="overview-entity-icon-compact" style={{ backgroundColor: bgColor, color }}>
+                      {getEntityIcon('contentType', contentType)}
+                    </div>
+                    <h3 className="overview-entity-name-compact">{contentType.name || 'Unnamed Content Type'}</h3>
+                  </div>
+                );
+              })}
+              {data.contentTypes.length > 5 && (
+                <div
+                  className="overview-entity-card-compact overview-view-all-card"
+                  onClick={() => {
+                    if (onNavigateToTab) {
+                      onNavigateToTab('content-types');
+                    }
+                  }}
+                >
+                  <div className="overview-view-all-content">
+                    <span className="overview-view-all-text">View all content types</span>
+                    <span className="overview-view-all-arrow">→</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -614,7 +629,6 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
             <div className="overview-section-number">06</div>
             <h2 className="overview-section-title-large">Regions</h2>
             <div className="overview-section-meta">
-              <span className="overview-section-count-large">{data.regions.length}</span>
               <div className="overview-section-label">Regions</div>
             </div>
           </div>
