@@ -227,6 +227,7 @@ function App() {
             onNavigateToTab={(tab) => {
               setActiveTab(tab);
             }}
+            onViewAllRules={() => setShowAllWritingRules(true)}
           />
         );
       case 'brand-foundations':

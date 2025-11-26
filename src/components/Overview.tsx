@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import type { BrandKitSchema } from '../types';
-import { Package, FileText, Users, Globe, Sparkles, Pencil, ChevronDown, ChevronUp } from 'lucide-react';
+import { Package, FileText, Users, Globe, Sparkles, Pencil } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -13,9 +12,10 @@ interface Props {
   onAudienceClick: (index: number) => void;
   onRegionClick: (index: number) => void;
   onNavigateToTab?: (tab: string) => void;
+  onViewAllRules?: () => void;
 }
 
-export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab }: Props) => {
+export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab, onViewAllRules }: Props) => {
 
   const getEntityIcon = (type: 'product' | 'contentType' | 'audience' | 'region', entity: any) => {
     if (type === 'product' && entity.icon) {
@@ -55,12 +55,8 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
     }
   };
 
-  // Get featured rules (first 3-5 global rules)
-  const allFeaturedRules = (data?.brandFoundations?.writingRules || []).slice(0, 5);
-  const [showAllRules, setShowAllRules] = useState(false);
-  const INITIAL_RULES_COUNT = 3;
-  const featuredRules = showAllRules ? allFeaturedRules : allFeaturedRules.slice(0, INITIAL_RULES_COUNT);
-  const hasMoreRules = allFeaturedRules.length > INITIAL_RULES_COUNT;
+  // Get featured rules (first 3 global rules)
+  const featuredRules = (data?.brandFoundations?.writingRules || []).slice(0, 3);
   
   // Get brand colors
   const brandColors = data?.brandFoundations?.brandColors;
@@ -450,22 +446,11 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
                 ))}
               </div>
               
-              {hasMoreRules && (
-                <button
-                  type="button"
-                  className="overview-rules-toggle"
-                  onClick={() => setShowAllRules(!showAllRules)}
-                >
-                  <span>{showAllRules ? 'Show less' : `Show ${allFeaturedRules.length - INITIAL_RULES_COUNT} more`}</span>
-                  {showAllRules ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
-              )}
-              
-              {onNavigateToTab && (
+              {onViewAllRules && (
                 <button
                   type="button"
                   className="overview-rules-view-all"
-                  onClick={() => onNavigateToTab('brand-foundations')}
+                  onClick={onViewAllRules}
                 >
                   View all rules →
                 </button>

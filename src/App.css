@@ -4362,30 +4362,6 @@ body {
   letter-spacing: 0.05em;
 }
 
-.overview-rules-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: transparent;
-  border: 1px solid var(--color-stroke-primary);
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: fit-content;
-  margin-top: 8px;
-}
-
-.overview-rules-toggle:hover {
-  background: var(--color-bg-secondary);
-  border-color: var(--color-stroke-secondary);
-  color: var(--color-text-primary);
-  transform: translateY(-1px);
-}
-
 .overview-rules-view-all {
   display: flex;
   align-items: center;
