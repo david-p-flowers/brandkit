@@ -56,6 +56,12 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
   // Get featured rules (first 3-5 global rules)
   const featuredRules = (data?.brandFoundations?.writingRules || []).slice(0, 5);
+  
+  // Get brand colors
+  const brandColors = data?.brandFoundations?.brandColors;
+  const primaryColor = brandColors?.primary || '#09090b';
+  const secondaryColor = brandColors?.secondary || '#676c79';
+  const accentColor = brandColors?.accent || '#6e6eff';
 
   if (!data || !data.brandFoundations) {
     return (
@@ -79,9 +85,9 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
   }
 
   return (
-    <div className="overview">
+    <div className="overview" style={{ '--brand-primary': primaryColor, '--brand-secondary': secondaryColor, '--brand-accent': accentColor } as React.CSSProperties}>
       {/* Hero Section - Split Layout */}
-      <div className="overview-hero-split">
+      <div className="overview-hero-split overview-section-00">
         <div className="overview-hero-left">
           <h1 className="overview-brand-name-large">
             {(data.brandFoundations?.brandIcon || data.brandFoundations?.brandDomain) && (
@@ -134,12 +140,14 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
       {/* About Your Brand */}
       {data.brandFoundations?.aboutYourBrand && (
-        <div className="overview-section-split">
+        <div className="overview-section-split overview-section-01">
           <div className="overview-section-left">
+            <div className="overview-section-number">01</div>
             <h2 className="overview-section-title-large">
               <span className="overview-title-line">About</span>
               <span className="overview-title-line">Your Brand</span>
             </h2>
+            <div className="overview-section-label">Brand Foundations</div>
           </div>
           <div className="overview-section-divider"></div>
           <div className="overview-section-right">
@@ -181,12 +189,14 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
       {/* Brand Voice & Tone */}
       {data.brandFoundations?.brandToneAndVoice && (
-        <div className="overview-section-split">
+        <div className="overview-section-split overview-section-02">
           <div className="overview-section-left">
+            <div className="overview-section-number">02</div>
             <h2 className="overview-section-title-large">
               <span className="overview-title-line">Brand Voice</span>
               <span className="overview-title-line">& Tone</span>
             </h2>
+            <div className="overview-section-label">Brand Foundations</div>
           </div>
           <div className="overview-section-divider"></div>
           <div className="overview-section-right">
@@ -228,11 +238,13 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
       {/* Products Showcase */}
       {(data.productLines?.length || 0) > 0 && (
-        <div className="overview-section-split">
+        <div className="overview-section-split overview-section-03">
           <div className="overview-section-left">
+            <div className="overview-section-number">03</div>
             <h2 className="overview-section-title-large">Products</h2>
             <div className="overview-section-meta">
               <span className="overview-section-count-large">{data.productLines.length}</span>
+              <div className="overview-section-label">Product Lines</div>
             </div>
           </div>
           <div className="overview-section-divider"></div>
@@ -280,14 +292,16 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
       {/* Content Types & Audiences - Side by Side */}
       {((data.contentTypes?.length || 0) > 0 || (data.audiences?.length || 0) > 0) && (
-        <div className="overview-section-split">
+        <div className="overview-section-split overview-section-04">
           {(data.contentTypes?.length || 0) > 0 && (
             <>
               <div className="overview-section-left">
+                <div className="overview-section-number">04</div>
                 <h2 className="overview-section-title-large">Content</h2>
                 <h2 className="overview-section-title-large">Types</h2>
                 <div className="overview-section-meta">
                   <span className="overview-section-count-large">{data.contentTypes.length}</span>
+                  <div className="overview-section-label">Content Types</div>
                 </div>
               </div>
               <div className="overview-section-divider"></div>
@@ -322,11 +336,13 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
       {/* Audiences - Full Width */}
       {(data.audiences?.length || 0) > 0 && (
-        <div className="overview-section-split">
+        <div className="overview-section-split overview-section-05">
           <div className="overview-section-left">
+            <div className="overview-section-number">05</div>
             <h2 className="overview-section-title-large">Audiences</h2>
             <div className="overview-section-meta">
               <span className="overview-section-count-large">{data.audiences.length}</span>
+              <div className="overview-section-label">Audiences</div>
             </div>
           </div>
           <div className="overview-section-divider"></div>
@@ -359,11 +375,13 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
       {/* Regions - Full Width */}
       {(data.regions?.length || 0) > 0 && (
-        <div className="overview-section-split">
+        <div className="overview-section-split overview-section-06">
           <div className="overview-section-left">
+            <div className="overview-section-number">06</div>
             <h2 className="overview-section-title-large">Regions</h2>
             <div className="overview-section-meta">
               <span className="overview-section-count-large">{data.regions.length}</span>
+              <div className="overview-section-label">Regions</div>
             </div>
           </div>
           <div className="overview-section-divider"></div>
@@ -396,12 +414,14 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
       {/* Writing Rules Typography - Split Layout */}
       {featuredRules.length > 0 && (
-        <div className="overview-section-split">
+        <div className="overview-section-split overview-section-07">
           <div className="overview-section-left">
+            <div className="overview-section-number">07</div>
             <h2 className="overview-section-title-large">
               <span className="overview-title-line">Writing</span>
               <span className="overview-title-line">Rules</span>
             </h2>
+            <div className="overview-section-label">Global Rules</div>
             <Sparkles size={32} className="overview-sparkle-icon-large" />
           </div>
           <div className="overview-section-divider"></div>

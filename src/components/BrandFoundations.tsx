@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { BrandFoundations as BrandFoundationsType, WritingRule, Audience, ContentType, Region } from '../types';
 import { MarkdownEditor } from './MarkdownEditor';
 import { AddRuleModal } from './AddRuleModal';
 import { RuleMenu } from './RuleMenu';
 import { X } from 'lucide-react';
+import { getBrandColors } from '../utils/brandColors';
 
 interface Props {
   data: BrandFoundationsType;
@@ -21,6 +22,38 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
 
   // Only show global rules from brandFoundations
   const allRules = data.writingRules;
+
+  // Auto-extract brand colors when domain or brand name changes
+  useEffect(() => {
+    const extractColors = async () => {
+      // Only extract if we have a domain or brand name and no existing colors
+      if ((data.brandDomain || data.brandName) && !data.brandColors) {
+        try {
+          const colors = await getBrandColors(
+            data.brandDomain,
+            data.brandName,
+            data.brandIcon?.startsWith('http') ? data.brandIcon : undefined
+          );
+          
+          onChange({
+            ...data,
+            brandColors: {
+              primary: colors.primary,
+              secondary: colors.secondary,
+              accent: colors.accent,
+            },
+          });
+        } catch (error) {
+          console.error('Error extracting brand colors:', error);
+        }
+      }
+    };
+
+    // Debounce the extraction
+    const timer = setTimeout(extractColors, 1000);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.brandDomain, data.brandName, data.brandIcon]);
 
   const updateField = <K extends keyof BrandFoundationsType>(
     field: K,

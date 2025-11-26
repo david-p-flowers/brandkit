@@ -9,6 +9,11 @@ export interface BrandFoundations {
   brandName: string;
   brandDomain: string;
   brandIcon?: string; // URL or icon name
+  brandColors?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+  };
   aboutYourBrand: string;
   brandStoryAndPurpose: string;
   brandToneAndVoice: string;
