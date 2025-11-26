@@ -4008,7 +4008,6 @@ body {
 .overview-title-line {
   display: block;
   line-height: 1;
-  font-size: 3.5rem;
 }
 
 .overview-section-meta {
@@ -4757,10 +4756,6 @@ body {
     font-size: 4rem;
   }
 
-  .overview-title-line {
-    font-size: 4rem;
-  }
-
   .overview-section-count-large {
     font-size: 2.75rem;
   }
@@ -4796,10 +4791,6 @@ body {
     font-size: 3.5rem;
   }
 
-  .overview-title-line {
-    font-size: 3.5rem;
-  }
-
   .overview-section-count-large {
     font-size: 2.5rem;
   }
@@ -4812,10 +4803,6 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 2.75rem;
-  }
-
-  .overview-title-line {
     font-size: 2.75rem;
   }
 
@@ -4861,10 +4848,6 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 2.5rem;
-  }
-
-  .overview-title-line {
     font-size: 2.5rem;
   }
 
@@ -4920,10 +4903,6 @@ body {
     font-size: 2rem;
   }
 
-  .overview-title-line {
-    font-size: 2rem;
-  }
-
   .overview-section-count-large {
     font-size: 1.75rem;
   }
@@ -4935,10 +4914,6 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 1.75rem;
-  }
-
-  .overview-title-line {
     font-size: 1.75rem;
   }
 
