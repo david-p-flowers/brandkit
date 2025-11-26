@@ -207,7 +207,7 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
               src={defaultHeaderImage}
               alt="Default header"
               className="overview-hero-image"
-              onError={(e) => {
+              onError={() => {
                 console.error('Failed to load default header image:', defaultHeaderImage);
                 setImageError(true);
               }}
