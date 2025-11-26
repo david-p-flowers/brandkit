@@ -3879,7 +3879,7 @@ body {
   display: grid;
   grid-template-columns: 300px 1px 1fr;
   gap: 64px;
-  padding: 80px 0;
+  padding: 48px 0;
   border-bottom: 1px solid var(--color-stroke-primary);
   align-items: start;
   opacity: 0;
@@ -3888,7 +3888,7 @@ body {
 }
 
 .overview-section-split.overview-section-01 {
-  padding-top: 40px;
+  padding-top: 24px;
 }
 
 @keyframes fadeInUp {
@@ -4813,7 +4813,7 @@ body {
 
 @media (max-width: 768px) {
   .overview-hero-split {
-    padding: 60px 0;
+    padding: 48px 0;
   }
 
   .overview-hero-split.has-background-image {
