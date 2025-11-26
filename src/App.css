@@ -4008,6 +4008,7 @@ body {
 .overview-title-line {
   display: block;
   line-height: 1;
+  font-size: 48px;
 }
 
 .overview-section-meta {
