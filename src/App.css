@@ -3813,7 +3813,7 @@ body {
 }
 
 .overview-brand-name-large {
-  font-size: 4rem;
+  font-size: 7rem;
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -4745,25 +4745,6 @@ body {
   background: #1f1f25;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Responsive Typography - Large Desktop */
-@media (max-width: 1600px) {
-  .overview-brand-name-large {
-    font-size: 7rem;
-  }
-
-  .overview-section-title-large {
-    font-size: 4.5rem;
-  }
-
-  .overview-title-line {
-    font-size: 4.5rem;
-  }
-
-  .overview-section-count-large {
-    font-size: 3rem;
-  }
 }
 
 /* Responsive Typography - Desktop */
