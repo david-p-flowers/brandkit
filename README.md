@@ -39,6 +39,31 @@ The app will be available at `http://localhost:5173`
 npm run build
 ```
 
+The production build will be in the `dist/` directory.
+
+### Deployment
+
+This project is configured for deployment on Vercel. To deploy:
+
+1. **Push to GitHub** (if not already done):
+   ```bash
+   git push origin main
+   ```
+
+2. **Deploy to Vercel**:
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Vercel will automatically detect the Vite configuration
+   - Click "Deploy"
+
+   The `vercel.json` configuration file is already set up for optimal deployment.
+
+Alternatively, you can use the Vercel CLI:
+```bash
+npm i -g vercel
+vercel
+```
+
 ## Usage
 
 1. **Navigate sections**: Use the sidebar and tabs to navigate between different sections
