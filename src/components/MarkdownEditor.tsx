@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Eye } from 'lucide-react';
 
 interface MarkdownEditorProps {
   value: string;
@@ -32,13 +33,13 @@ export const MarkdownEditor = ({ value, onChange, placeholder, rows = 12 }: Mark
         <button type="button" className="toolbar-btn">•</button>
         <button type="button" className="toolbar-btn">1.</button>
         <div className="toolbar-divider"></div>
-        <button 
-          type="button" 
+        <button
+          type="button"
           className={`toolbar-btn ${isPreview ? 'active' : ''}`}
           onClick={() => setIsPreview(!isPreview)}
           title={isPreview ? 'Edit' : 'Preview'}
         >
-          👁️
+          <Eye size={16} />
         </button>
       </div>
       {isPreview ? (
