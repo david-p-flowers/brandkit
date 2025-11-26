@@ -181,8 +181,8 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
   const accentColor = brandColors?.accent || '#6e6eff';
 
   if (!data || !data.brandFoundations) {
-    // Default header image for empty state
-    const defaultHeaderImage = 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=2000&h=600&fit=crop&q=80';
+    // Default header image for empty state - using Figma design
+    const defaultHeaderImage = '/LinkedIn cover - 32.png';
     
     return (
       <div className="overview">
