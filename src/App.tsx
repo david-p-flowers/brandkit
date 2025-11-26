@@ -3,6 +3,7 @@ import type { BrandKitSchema, ProductLine } from './types';
 import { saveToLocalStorage, loadFromLocalStorage, getEmptySchema, clearLocalStorage } from './utils/storage';
 import { getKlaviyoData } from './utils/klaviyoData';
 import { getXeroData } from './utils/xeroData';
+import { getRipplingData } from './utils/ripplingData';
 import { Sidebar } from './components/Sidebar';
 import { TabNavigation } from './components/TabNavigation';
 import { Overview } from './components/Overview';
@@ -29,7 +30,7 @@ function App() {
   const getInitialVersion = (): string => {
     const params = new URLSearchParams(window.location.search);
     const versionParam = params.get('version');
-    if (versionParam && ['Default', 'Klaviyo', 'Xero'].includes(versionParam)) {
+    if (versionParam && ['Default', 'Klaviyo', 'Xero', 'Rippling'].includes(versionParam)) {
       return versionParam;
     }
     // Fallback to localStorage if no URL param
@@ -73,6 +74,11 @@ function App() {
     } else if (version === 'Xero') {
       const xeroData = getXeroData();
       setData(xeroData);
+      // Save version preference but don't save the data (it's always loaded fresh)
+      localStorage.setItem('brand-kit-version', version);
+    } else if (version === 'Rippling') {
+      const ripplingData = getRipplingData();
+      setData(ripplingData);
       // Save version preference but don't save the data (it's always loaded fresh)
       localStorage.setItem('brand-kit-version', version);
     } else {

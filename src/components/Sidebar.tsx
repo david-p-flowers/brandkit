@@ -12,7 +12,7 @@ export const Sidebar = ({ activeSection = 'brand-kit', onClearStorage, selectedV
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const versions = ['Default', 'Klaviyo', 'Xero'];
+  const versions = ['Default', 'Klaviyo', 'Xero', 'Rippling'];
 
   useEffect(() => {
     if (!isDropdownOpen) return;

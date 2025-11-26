@@ -9,6 +9,7 @@ export interface BrandFoundations {
   brandName: string;
   brandDomain: string;
   brandIcon?: string; // URL or icon name
+  brandHeaderImage?: string; // URL or base64 data URL for uploaded header image
   brandColors?: {
     primary?: string;
     secondary?: string;

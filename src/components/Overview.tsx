@@ -1,8 +1,10 @@
+import { useState, useEffect, useRef } from 'react';
 import type { BrandKitSchema } from '../types';
-import { Package, FileText, Users, Globe, Sparkles, Pencil } from 'lucide-react';
+import { Package, FileText, Users, Globe, Sparkles, Pencil, Upload, X } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { getOGImageUrl, getBrandHeaderImage } from '../utils/brandHeaderImage';
 
 interface Props {
   data: BrandKitSchema;
@@ -15,7 +17,108 @@ interface Props {
   onViewAllRules?: () => void;
 }
 
-export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab, onViewAllRules }: Props) => {
+export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab, onViewAllRules }: Props) => {
+  const [headerImageUrl, setHeaderImageUrl] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
+  const [isHoveringImage, setIsHoveringImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Determine header image URL - prioritize custom uploaded image, then fetched image
+  useEffect(() => {
+    const determineHeaderImage = async () => {
+      // First, check if there's a custom uploaded image
+      if (data.brandFoundations?.brandHeaderImage) {
+        setHeaderImageUrl(data.brandFoundations.brandHeaderImage);
+        setImageError(false);
+        return;
+      }
+
+      // If no custom image, try to fetch from domain
+      if (!data.brandFoundations?.brandDomain) {
+        setHeaderImageUrl(null);
+        setImageError(false);
+        return;
+      }
+
+      setImageError(false);
+      
+      // Try to get the image using the utility function
+      try {
+        const imageUrl = await getBrandHeaderImage(data.brandFoundations.brandDomain);
+        if (imageUrl) {
+          setHeaderImageUrl(imageUrl);
+        } else {
+          // Fallback to common OG image path
+          const ogUrl = getOGImageUrl(data.brandFoundations.brandDomain);
+          setHeaderImageUrl(ogUrl);
+        }
+      } catch (error) {
+        console.log('Error fetching header image:', error);
+        // Fallback to common OG image path
+        const ogUrl = getOGImageUrl(data.brandFoundations.brandDomain);
+        setHeaderImageUrl(ogUrl);
+      }
+    };
+
+    determineHeaderImage();
+  }, [data.brandFoundations?.brandDomain, data.brandFoundations?.brandHeaderImage]);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB');
+      return;
+    }
+
+    // Convert to base64 data URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      if (dataUrl && data.brandFoundations) {
+        // Update the brand foundations with the new image
+        onChange({
+          ...data,
+          brandFoundations: {
+            ...data.brandFoundations,
+            brandHeaderImage: dataUrl,
+          },
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleRemoveImage = () => {
+    if (data.brandFoundations) {
+      onChange({
+        ...data,
+        brandFoundations: {
+          ...data.brandFoundations,
+          brandHeaderImage: undefined,
+        },
+      });
+    }
+  };
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const isEmoji = (str: string): boolean => {
     return /[\u{1F300}-\u{1F9FF}]/u.test(str);
@@ -80,18 +183,27 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
   if (!data || !data.brandFoundations) {
     return (
       <div className="overview">
-        <div className="overview-hero-split">
-          <div className="overview-hero-left">
-            <h1 className="overview-brand-name-large">
-              <span className="overview-brand-word">Your</span>
-              <span className="overview-brand-word">Brand</span>
-            </h1>
-          </div>
-          <div className="overview-hero-divider"></div>
-          <div className="overview-hero-right">
-            <p className="overview-brand-description">
-              Welcome to your brand kit. This is where your brand story comes to life.
-            </p>
+        <div className="overview-hero-split overview-section-00 has-default-background">
+          <div className="overview-hero-default-background"></div>
+          <div className="overview-hero-content overview-hero-content-fullwidth">
+            <div className="overview-hero-center">
+              <h1 className="overview-brand-name-large">
+                <span className="overview-brand-word">Your</span>
+                <span className="overview-brand-word">Brand</span>
+              </h1>
+              <p className="overview-brand-description">
+                Welcome to your brand kit. This is where your brand story comes to life.
+              </p>
+              {onNavigateToTab && (
+                <button
+                  type="button"
+                  className="btn-primary overview-create-brand-kit-button"
+                  onClick={() => onNavigateToTab('brand-foundations')}
+                >
+                  Create brand kit
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -100,55 +212,116 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
 
   return (
     <div className="overview" style={{ '--brand-primary': primaryColor, '--brand-secondary': secondaryColor, '--brand-accent': accentColor } as React.CSSProperties}>
-      {/* Hero Section - Split Layout */}
-      <div className="overview-hero-split overview-section-00">
-        <div className="overview-hero-left">
-          <h1 className="overview-brand-name-large">
-            {(data.brandFoundations?.brandIcon || data.brandFoundations?.brandDomain) && (
-              <span className="overview-brand-icon">
-                {data.brandFoundations?.brandIcon && data.brandFoundations.brandIcon.startsWith('http') ? (
-                  <img 
-                    src={data.brandFoundations.brandIcon} 
-                    alt={data.brandFoundations?.brandName || 'Brand'} 
-                    className="overview-brand-icon-img"
-                  />
-                ) : data.brandFoundations?.brandDomain ? (
-                  <img 
-                    src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(data.brandFoundations.brandDomain)}&sz=64`}
-                    alt={data.brandFoundations?.brandName || 'Brand'}
-                    className="overview-brand-icon-img"
-                  />
-                ) : null}
-              </span>
+      {/* Hero Section - Full Width with Background Image or Default Gradient */}
+      <div className={`overview-hero-split overview-section-00 ${headerImageUrl && !imageError ? 'has-background-image' : 'has-default-background'}`}>
+        {headerImageUrl && !imageError ? (
+          <>
+            <div 
+              className="overview-hero-background-image"
+              onMouseEnter={() => setIsHoveringImage(true)}
+              onMouseLeave={() => setIsHoveringImage(false)}
+            >
+              <img
+                src={headerImageUrl}
+                alt={`${data.brandFoundations?.brandName || 'Brand'} header`}
+                className="overview-hero-image"
+                onError={() => setImageError(true)}
+              />
+              {isHoveringImage && (
+                <div className="overview-hero-image-overlay">
+                  <button
+                    type="button"
+                    className="overview-hero-image-upload-btn"
+                    onClick={handleImageClick}
+                    title="Change cover"
+                  >
+                    Change cover
+                  </button>
+                  {data.brandFoundations?.brandHeaderImage && (
+                    <button
+                      type="button"
+                      className="overview-hero-image-remove-btn"
+                      onClick={handleRemoveImage}
+                      title="Remove cover"
+                    >
+                      <X size={16} />
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="overview-hero-gradient-overlay"></div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+            />
+          </>
+        ) : (
+          <div className="overview-hero-default-background"></div>
+        )}
+        <div className="overview-hero-content">
+          <div className="overview-hero-left">
+            <h1 className="overview-brand-name-large">
+              {(data.brandFoundations?.brandIcon || data.brandFoundations?.brandDomain) && (
+                <span className="overview-brand-icon">
+                  {data.brandFoundations?.brandIcon && data.brandFoundations.brandIcon.startsWith('http') ? (
+                    <img 
+                      src={data.brandFoundations.brandIcon} 
+                      alt={data.brandFoundations?.brandName || 'Brand'} 
+                      className="overview-brand-icon-img"
+                    />
+                  ) : data.brandFoundations?.brandDomain ? (
+                    <img 
+                      src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(data.brandFoundations.brandDomain)}&sz=64`}
+                      alt={data.brandFoundations?.brandName || 'Brand'}
+                      className="overview-brand-icon-img"
+                    />
+                  ) : null}
+                </span>
+              )}
+              {data.brandFoundations?.brandName ? (
+                <>
+                  {data.brandFoundations.brandName.split(' ').map((word, i) => (
+                    <span key={i} className="overview-brand-word">{word}</span>
+                  ))}
+                </>
+              ) : (
+                <span className="overview-brand-word">Your</span>
+              )}
+              {!data.brandFoundations?.brandName && (
+                <span className="overview-brand-word">Brand</span>
+              )}
+            </h1>
+          </div>
+          <div className="overview-hero-divider"></div>
+          <div className="overview-hero-right">
+            {data.brandFoundations?.brandDomain && (
+              <p className="overview-brand-domain">{data.brandFoundations.brandDomain}</p>
             )}
-            {data.brandFoundations?.brandName ? (
-              <>
-                {data.brandFoundations.brandName.split(' ').map((word, i) => (
-                  <span key={i} className="overview-brand-word">{word}</span>
-                ))}
-              </>
+            {data.brandFoundations?.aboutYourBrand ? (
+              <p className="overview-brand-description">
+                {data.brandFoundations.aboutYourBrand}
+              </p>
             ) : (
-              <span className="overview-brand-word">Your</span>
+              <>
+                <p className="overview-brand-description">
+                  Welcome to your brand kit. This is where your brand story comes to life.
+                </p>
+                {onNavigateToTab && (
+                  <button
+                    type="button"
+                    className="btn-primary overview-create-brand-kit-button"
+                    onClick={() => onNavigateToTab('brand-foundations')}
+                  >
+                    Create brand kit
+                  </button>
+                )}
+              </>
             )}
-            {!data.brandFoundations?.brandName && (
-              <span className="overview-brand-word">Brand</span>
-            )}
-          </h1>
-        </div>
-        <div className="overview-hero-divider"></div>
-        <div className="overview-hero-right">
-          {data.brandFoundations?.brandDomain && (
-            <p className="overview-brand-domain">{data.brandFoundations.brandDomain}</p>
-          )}
-          {data.brandFoundations?.aboutYourBrand ? (
-            <p className="overview-brand-description">
-              {data.brandFoundations.aboutYourBrand}
-            </p>
-          ) : (
-            <p className="overview-brand-description">
-              Welcome to your brand kit. This is where your brand story comes to life.
-            </p>
-          )}
+          </div>
         </div>
       </div>
 
@@ -473,27 +646,6 @@ export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceC
         </div>
       )}
 
-      {/* Empty State */}
-      {(data.productLines?.length || 0) === 0 &&
-        (data.contentTypes?.length || 0) === 0 &&
-        (data.audiences?.length || 0) === 0 &&
-        (data.regions?.length || 0) === 0 &&
-        featuredRules.length === 0 && (
-          <div className="overview-empty-state">
-            <Sparkles size={64} />
-            <h2>Welcome to your Brand Kit</h2>
-            <p>Start building your brand by adding products, content types, audiences, and writing rules.</p>
-            {onNavigateToTab && (
-              <button
-                type="button"
-                className="overview-empty-state-button"
-                onClick={() => onNavigateToTab('brand-foundations')}
-              >
-                Create brand kit
-              </button>
-            )}
-          </div>
-        )}
     </div>
   );
 };
