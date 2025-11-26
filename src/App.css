@@ -1188,8 +1188,22 @@ body {
 }
 
 .empty-state-card {
-  /* Inherits styles from audience-card, content-type-card, etc. */
-  /* Additional empty state specific styles can go here if needed */
+  background: var(--color-bg-main);
+  border: 1px solid var(--color-stroke-primary);
+  border-radius: 14px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 200px;
+}
+
+.empty-state-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* Product Lines Table */
