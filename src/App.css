@@ -3762,7 +3762,7 @@ body {
   width: 100%;
   padding: 40px 0;
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 24px auto 0;
   background: var(--color-bg-primary);
 }
 
