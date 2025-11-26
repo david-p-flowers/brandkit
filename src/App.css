@@ -1385,10 +1385,16 @@ body {
 .card-icon-content {
   width: 32px;
   height: 32px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.content-type-card:hover .card-icon-content {
+  transform: scale(1.1);
 }
 
 .card-icon-emoji {
