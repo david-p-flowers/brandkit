@@ -39,31 +39,14 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
     };
   }, [isTagDropdownOpen]);
 
-  // Collect all rules from all sources
+  // Only show global rules from brandFoundations
   const allRules: (WritingRule & { source?: string; sourceName?: string })[] = [
-    // Global rules from brandFoundations
+    // Global rules from brandFoundations only
     ...data.writingRules.map(rule => ({ ...rule, source: 'global' as const })),
-    // Audience-specific rules
-    ...audiences.flatMap(audience => 
-      audience.writingRules.map(rule => ({ ...rule, source: 'audience' as const, sourceName: audience.name }))
-    ),
-    // Content type-specific rules
-    ...contentTypes.flatMap(contentType => 
-      contentType.contentTypeRules.map(rule => ({ ...rule, source: 'contentType' as const, sourceName: contentType.name }))
-    ),
-    // Region-specific rules
-    ...regions.flatMap(region => 
-      region.writingRules.map(rule => ({ ...rule, source: 'region' as const, sourceName: region.name }))
-    ),
   ];
 
-  // Get all available tags from entities
-  const availableTags = [
-    'Global',
-    ...audiences.map(a => a.name || '').filter(Boolean),
-    ...contentTypes.map(ct => ct.name || '').filter(Boolean),
-    ...regions.map(r => r.name || '').filter(Boolean),
-  ];
+  // Only Global tag available since we're only showing global rules
+  const availableTags = ['Global'];
 
   const updateField = <K extends keyof BrandFoundationsType>(
     field: K,
@@ -220,9 +203,9 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
       <div className="section-card">
         <div className="section-header">
           <div>
-            <h3>All Writing Rules</h3>
+            <h3>Global Writing Rules</h3>
             <p className="section-description">
-              These rules apply to your entire brand kit across all products, content types, audiences, and regions. To add region or audience-specific rules, go to their respective pages.
+              These global rules apply to your entire brand kit across all products, content types, audiences, and regions. To add region or audience-specific rules, go to their respective pages.
             </p>
           </div>
           <button type="button" onClick={addRule} className="btn-add-rule">
@@ -292,31 +275,8 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
               </div>
               <div className="rules-table-body">
                 {filteredRules.map((rule, index) => {
-                  // Find the rule in its original location for editing/deleting
-                  const ruleWithSource = rule;
-                  let originalIndex: number | null = null;
-                  
-                  if (ruleWithSource.source === 'global') {
-                    originalIndex = data.writingRules.findIndex(r => r.id === rule.id);
-                  } else if (ruleWithSource.source === 'audience' && ruleWithSource.sourceName) {
-                    const audience = audiences.find(a => a.name === ruleWithSource.sourceName);
-                    if (audience) {
-                      originalIndex = audience.writingRules.findIndex(r => r.id === rule.id);
-                    }
-                  } else if (ruleWithSource.source === 'contentType' && ruleWithSource.sourceName) {
-                    const contentType = contentTypes.find(ct => ct.name === ruleWithSource.sourceName);
-                    if (contentType) {
-                      originalIndex = contentType.contentTypeRules.findIndex(r => r.id === rule.id);
-                    }
-                  } else if (ruleWithSource.source === 'region' && ruleWithSource.sourceName) {
-                    const region = regions.find(r => r.name === ruleWithSource.sourceName);
-                    if (region) {
-                      originalIndex = region.writingRules.findIndex(r => r.id === rule.id);
-                    }
-                  }
-
-                  // Only allow editing/deleting global rules from this view
-                  const isGlobalRule = ruleWithSource.source === 'global';
+                  // All rules shown here are global rules from brandFoundations
+                  const originalIndex = data.writingRules.findIndex(r => r.id === rule.id);
                   
                   return (
                     <div key={`${rule.id}-${index}`} className="rules-table-row">
@@ -326,13 +286,12 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
                           type="text"
                           value={rule.description || rule.name}
                           onChange={(e) => {
-                            if (isGlobalRule && originalIndex !== null) {
+                            if (originalIndex !== null && originalIndex !== -1) {
                               updateRule(originalIndex, { ...rule, description: e.target.value, name: e.target.value });
                             }
                           }}
                           placeholder="Rule description"
                           className="rule-input"
-                          disabled={!isGlobalRule}
                         />
                       </div>
                       <div className="rules-col-tags">
@@ -349,18 +308,12 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
                         </div>
                       </div>
                       <div className="rules-col-actions">
-                        {isGlobalRule && originalIndex !== null ? (
+                        {originalIndex !== null && originalIndex !== -1 ? (
                           <RuleMenu
-                            onEdit={() => handleEditRule(originalIndex!)}
-                            onDelete={() => handleDeleteRule(originalIndex!)}
+                            onEdit={() => handleEditRule(originalIndex)}
+                            onDelete={() => handleDeleteRule(originalIndex)}
                           />
-                        ) : (
-                          <span className="rule-source-indicator" title={`This rule is managed in ${ruleWithSource.sourceName || ruleWithSource.source}`}>
-                            {ruleWithSource.source === 'audience' && '👥'}
-                            {ruleWithSource.source === 'contentType' && '📄'}
-                            {ruleWithSource.source === 'region' && '🌍'}
-                          </span>
-                        )}
+                        ) : null}
                       </div>
                     </div>
                   );
