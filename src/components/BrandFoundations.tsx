@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import type { BrandFoundations as BrandFoundationsType, WritingRule, Audience, ContentType, Region } from '../types';
 import { MarkdownEditor } from './MarkdownEditor';
 import { AddRuleModal } from './AddRuleModal';
@@ -14,39 +14,12 @@ interface Props {
 }
 
 export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regions }: Props) => {
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [showAddRuleModal, setShowAddRuleModal] = useState(false);
   const [editingRuleIndex, setEditingRuleIndex] = useState<number | null>(null);
   const [deleteRuleIndex, setDeleteRuleIndex] = useState<number | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsTagDropdownOpen(false);
-      }
-    };
-
-    if (isTagDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isTagDropdownOpen]);
 
   // Only show global rules from brandFoundations
-  const allRules: (WritingRule & { source?: string; sourceName?: string })[] = [
-    // Global rules from brandFoundations only
-    ...data.writingRules.map(rule => ({ ...rule, source: 'global' as const })),
-  ];
-
-  // Only Global tag available since we're only showing global rules
-  const availableTags = ['Global'];
+  const allRules = data.writingRules;
 
   const updateField = <K extends keyof BrandFoundationsType>(
     field: K,
@@ -97,35 +70,6 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
 
   const removeRule = (index: number) => {
     updateField('writingRules', data.writingRules.filter((_, i) => i !== index));
-  };
-
-  // Filter rules based on search and tag filter
-  const filteredRules = allRules.filter((rule) => {
-    const matchesSearch = searchQuery === '' || 
-      (rule.description || rule.name).toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTag = selectedTags.length === 0 || 
-      rule.tags.some(tag => {
-        // Normalize tag comparison (case-insensitive)
-        const normalizedTag = tag === 'global' ? 'Global' : tag;
-        return selectedTags.includes(normalizedTag);
-      });
-    return matchesSearch && matchesTag;
-  });
-
-  const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
-  };
-
-  const selectAllTags = () => {
-    setSelectedTags(availableTags);
-  };
-
-  const clearTags = () => {
-    setSelectedTags([]);
   };
 
   return (
@@ -213,59 +157,7 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
           </button>
         </div>
         
-        {/* Filters and Search */}
-        <div className="rules-filters">
-          <div className="filter-dropdown-container" ref={dropdownRef}>
-            <button
-              type="button"
-              className="filter-select"
-              onClick={() => setIsTagDropdownOpen(!isTagDropdownOpen)}
-            >
-              {selectedTags.length === 0 
-                ? 'All Tags' 
-                : selectedTags.length === 1 
-                  ? selectedTags[0]
-                  : `${selectedTags.length} tags selected`}
-              <span className="dropdown-arrow">▼</span>
-            </button>
-            {isTagDropdownOpen && (
-              <div className="filter-dropdown-menu">
-                <div className="filter-dropdown-actions">
-                  <button type="button" onClick={selectAllTags} className="filter-action-btn">
-                    Select All
-                  </button>
-                  <button type="button" onClick={clearTags} className="filter-action-btn">
-                    Clear
-                  </button>
-                </div>
-                <div className="filter-dropdown-options">
-                  {availableTags.map(tag => (
-                    <label key={tag} className="filter-option">
-                      <input
-                        type="checkbox"
-                        checked={selectedTags.includes(tag)}
-                        onChange={() => toggleTag(tag)}
-                      />
-                      <span>{tag}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="search-box">
-            <span className="search-icon">🔍</span>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search rules"
-              className="search-input"
-            />
-          </div>
-        </div>
-
-        {filteredRules.length > 0 ? (
+        {allRules.length > 0 ? (
           <div className="rules-table-container">
             <div className="rules-table">
               <div className="rules-table-header">
@@ -274,10 +166,7 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
                 <div className="rules-col-actions"></div>
               </div>
               <div className="rules-table-body">
-                {filteredRules.map((rule, index) => {
-                  // All rules shown here are global rules from brandFoundations
-                  const originalIndex = data.writingRules.findIndex(r => r.id === rule.id);
-                  
+                {allRules.map((rule, index) => {
                   return (
                     <div key={`${rule.id}-${index}`} className="rules-table-row">
                       <div className="rules-col-rule">
@@ -286,9 +175,7 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
                           type="text"
                           value={rule.description || rule.name}
                           onChange={(e) => {
-                            if (originalIndex !== null && originalIndex !== -1) {
-                              updateRule(originalIndex, { ...rule, description: e.target.value, name: e.target.value });
-                            }
+                            updateRule(index, { ...rule, description: e.target.value, name: e.target.value });
                           }}
                           placeholder="Rule description"
                           className="rule-input"
@@ -308,17 +195,20 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
                         </div>
                       </div>
                       <div className="rules-col-actions">
-                        {originalIndex !== null && originalIndex !== -1 ? (
-                          <RuleMenu
-                            onEdit={() => handleEditRule(originalIndex)}
-                            onDelete={() => handleDeleteRule(originalIndex)}
-                          />
-                        ) : null}
+                        <RuleMenu
+                          onEdit={() => handleEditRule(index)}
+                          onDelete={() => handleDeleteRule(index)}
+                        />
                       </div>
                     </div>
                   );
                 })}
               </div>
+            </div>
+            <div className="rules-table-footer">
+              <button type="button" className="btn-view-all-rules">
+                View all rules
+              </button>
             </div>
           </div>
         ) : (

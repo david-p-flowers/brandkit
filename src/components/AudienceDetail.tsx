@@ -163,61 +163,68 @@ export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritin
             </p>
           </div>
           {allRules.length > 0 ? (
-            <div className="writing-rules-table">
-              <div className="writing-rules-table-header">
-                <div className="rules-col-rule">Rule</div>
-                <div className="rules-col-tags">Tags</div>
-                <div className="rules-col-actions"></div>
-              </div>
-              {allRules.map((rule, ruleIndex) => {
-                const isGlobal = showGlobalRules && ruleIndex < globalWritingRules.length;
-                const actualRuleIndex = isGlobal ? -1 : ruleIndex - globalWritingRules.length;
-                
-                return (
-                  <div key={rule.id || ruleIndex} className="writing-rules-table-row">
-                    <div className="rules-col-rule">
-                      <input
-                        type="text"
-                        value={rule.description || rule.name}
-                        onChange={(e) => {
-                          if (!isGlobal) {
-                            updateWritingRule(actualRuleIndex, { ...rule, description: e.target.value });
-                          }
-                        }}
-                        placeholder="Enter rule description..."
-                        className="rule-input"
-                        disabled={isGlobal}
-                      />
-                    </div>
-                    <div className="rules-col-tags">
-                      <div className="tag-list">
-                        {rule.tags && rule.tags.map((tag, tagIndex) => {
-                          // For audience-specific rules, always show the current audience name
-                          const displayTag = isGlobal ? tag : (tag === previousAudienceNameRef.current || tag === audience.name ? (audience.name || 'Audience') : tag);
-                          return (
-                            <span key={tagIndex} className="tag-chip">
-                              {displayTag}
-                            </span>
-                          );
-                        })}
+            <>
+              <div className="writing-rules-table">
+                <div className="writing-rules-table-header">
+                  <div className="rules-col-rule">Rule</div>
+                  <div className="rules-col-tags">Tags</div>
+                  <div className="rules-col-actions"></div>
+                </div>
+                {allRules.map((rule, ruleIndex) => {
+                  const isGlobal = showGlobalRules && ruleIndex < globalWritingRules.length;
+                  const actualRuleIndex = isGlobal ? -1 : ruleIndex - globalWritingRules.length;
+                  
+                  return (
+                    <div key={rule.id || ruleIndex} className="writing-rules-table-row">
+                      <div className="rules-col-rule">
+                        <input
+                          type="text"
+                          value={rule.description || rule.name}
+                          onChange={(e) => {
+                            if (!isGlobal) {
+                              updateWritingRule(actualRuleIndex, { ...rule, description: e.target.value });
+                            }
+                          }}
+                          placeholder="Enter rule description..."
+                          className="rule-input"
+                          disabled={isGlobal}
+                        />
+                      </div>
+                      <div className="rules-col-tags">
+                        <div className="tag-list">
+                          {rule.tags && rule.tags.map((tag, tagIndex) => {
+                            // For audience-specific rules, always show the current audience name
+                            const displayTag = isGlobal ? tag : (tag === previousAudienceNameRef.current || tag === audience.name ? (audience.name || 'Audience') : tag);
+                            return (
+                              <span key={tagIndex} className="tag-chip">
+                                {displayTag}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <div className="rules-col-actions">
+                        {!isGlobal && (
+                          <button
+                            type="button"
+                            onClick={() => removeWritingRule(actualRuleIndex)}
+                            className="btn-remove-rule"
+                            title="Remove rule"
+                          >
+                            ⋮
+                          </button>
+                        )}
                       </div>
                     </div>
-                    <div className="rules-col-actions">
-                      {!isGlobal && (
-                        <button
-                          type="button"
-                          onClick={() => removeWritingRule(actualRuleIndex)}
-                          className="btn-remove-rule"
-                          title="Remove rule"
-                        >
-                          ⋮
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+              <div className="rules-table-footer">
+                <button type="button" className="btn-view-all-rules">
+                  View all rules
+                </button>
+              </div>
+            </>
           ) : (
             <div className="empty-state">
               <p>No writing rules yet. Click "+ Add Rule" to get started.</p>

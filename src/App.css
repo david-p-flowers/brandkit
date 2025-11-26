@@ -873,6 +873,31 @@ body {
   border-bottom: none;
 }
 
+.rules-table-footer {
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+  background: var(--color-bg-main);
+  border-top: 1px solid var(--color-stroke-primary);
+  border-radius: 0 0 12px 12px;
+}
+
+.btn-view-all-rules {
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.btn-view-all-rules:hover {
+  background: var(--color-bg-secondary);
+}
+
 .rule-source-indicator {
   font-size: 16px;
   opacity: 0.6;
