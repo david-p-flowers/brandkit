@@ -17,16 +17,29 @@ interface Props {
 
 export const Overview = ({ data, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab, onViewAllRules }: Props) => {
 
+  const isEmoji = (str: string): boolean => {
+    return /[\u{1F300}-\u{1F9FF}]/u.test(str);
+  };
+
   const getEntityIcon = (type: 'product' | 'contentType' | 'audience' | 'region', entity: any) => {
     if (type === 'product' && entity.icon) {
+      if (isEmoji(entity.icon)) {
+        return <span style={{ fontSize: '20px' }}>{entity.icon}</span>;
+      }
       const IconComponent = (LucideIcons as any)[entity.icon];
       return IconComponent ? <IconComponent size={20} /> : <Package size={20} />;
     }
     if (type === 'contentType' && entity.icon) {
+      if (isEmoji(entity.icon)) {
+        return <span style={{ fontSize: '20px' }}>{entity.icon}</span>;
+      }
       const IconComponent = (LucideIcons as any)[entity.icon];
       return IconComponent ? <IconComponent size={20} /> : <FileText size={20} />;
     }
     if (type === 'audience' && entity.icon) {
+      if (isEmoji(entity.icon)) {
+        return <span style={{ fontSize: '20px' }}>{entity.icon}</span>;
+      }
       const IconComponent = (LucideIcons as any)[entity.icon];
       return IconComponent ? <IconComponent size={20} /> : <Users size={20} />;
     }

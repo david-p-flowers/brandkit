@@ -3,6 +3,7 @@ import type { Audience } from '../types';
 import { CardMenu } from './CardMenu';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
 import { AddAudienceModal } from './AddAudienceModal';
+import * as LucideIcons from 'lucide-react';
 
 interface Props {
   audiences: Audience[];
@@ -11,12 +12,52 @@ interface Props {
   onDuplicateTagUpdate: (originalName: string, newName: string) => void;
 }
 
-const getInitialLetter = (name: string): string => {
-  if (!name) return '?';
-  return name.charAt(0).toUpperCase();
+const isEmoji = (str: string): boolean => {
+  return /[\u{1F300}-\u{1F9FF}]/u.test(str);
 };
 
-const getIconColor = (index: number): { bg: string; text: string } => {
+const getAudienceIcon = (audience: Audience) => {
+  const defaultIcon = 'Users';
+  const audienceIcon = audience.icon || defaultIcon;
+  
+  if (isEmoji(audienceIcon)) {
+    return { type: 'emoji' as const, value: audienceIcon };
+  }
+  
+  const IconComponent = (LucideIcons as any)[audienceIcon] || LucideIcons.Users;
+  return { type: 'icon' as const, value: IconComponent };
+};
+
+const getAudienceColor = (audience: Audience, index: number): { bg: string; text: string } => {
+  if (audience.color) {
+    const color = audience.color;
+    // Handle different color formats
+    let r, g, b;
+    if (color.startsWith('#')) {
+      r = parseInt(color.slice(1, 3), 16);
+      g = parseInt(color.slice(3, 5), 16);
+      b = parseInt(color.slice(5, 7), 16);
+    } else if (color.startsWith('rgb')) {
+      const matches = color.match(/\d+/g);
+      if (matches && matches.length >= 3) {
+        r = parseInt(matches[0]);
+        g = parseInt(matches[1]);
+        b = parseInt(matches[2]);
+      } else {
+        r = g = b = 0;
+      }
+    } else if (color.startsWith('hsl')) {
+      // For HSL, we'll use a simpler approach - convert to a light background
+      const bg = `${color}1A`; // Add opacity
+      return { bg, text: color };
+    } else {
+      r = g = b = 0;
+    }
+    const bg = `rgba(${r}, ${g}, ${b}, 0.1)`;
+    return { bg, text: color };
+  }
+  
+  // Default colors if no color is set
   const colors = [
     { bg: '#e5f7f3', text: '#00b285' }, // green
     { bg: 'rgba(198,0,233,0.1)', text: '#c600e9' }, // purple
@@ -90,8 +131,8 @@ export const Audiences = ({ audiences, onChange, onAudienceClick, onDuplicateTag
       {audiences.length > 0 ? (
         <div className="audience-cards">
           {audiences.map((audience, index) => {
-            const iconColor = getIconColor(index);
-            const initial = getInitialLetter(audience.name || '?');
+            const iconData = getAudienceIcon(audience);
+            const iconColor = getAudienceColor(audience, index);
             
             return (
               <div 
@@ -101,7 +142,11 @@ export const Audiences = ({ audiences, onChange, onAudienceClick, onDuplicateTag
                 style={{ cursor: 'pointer' }}
               >
                 <div className="card-icon" style={{ backgroundColor: iconColor.bg, color: iconColor.text }}>
-                  {initial}
+                  {iconData.type === 'emoji' ? (
+                    <span style={{ fontSize: '20px' }}>{iconData.value}</span>
+                  ) : (
+                    <iconData.value size={20} />
+                  )}
                 </div>
                 <div className="card-content">
                   <div className="card-title">

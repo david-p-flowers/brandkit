@@ -65,11 +65,20 @@ export const ProductLines = ({ productLines, onChange, onProductClick, onDuplica
     }
   };
 
+  const isEmoji = (str: string): boolean => {
+    return /[\u{1F300}-\u{1F9FF}]/u.test(str);
+  };
+
   const getProductIcon = (product: ProductLine) => {
     const defaultIcon = 'Package';
     const productIcon = product.icon || defaultIcon;
+    
+    if (isEmoji(productIcon)) {
+      return { type: 'emoji' as const, value: productIcon };
+    }
+    
     const IconComponent = (LucideIcons as any)[productIcon] || LucideIcons.Package;
-    return IconComponent;
+    return { type: 'icon' as const, value: IconComponent };
   };
 
   const getProductColor = (product: ProductLine, index: number): { bg: string; text: string } => {
@@ -110,7 +119,7 @@ export const ProductLines = ({ productLines, onChange, onProductClick, onDuplica
         <div className="product-cards">
           {productLines.map((productLine, index) => {
             const iconColor = getProductColor(productLine, index);
-            const IconComponent = getProductIcon(productLine);
+            const iconData = getProductIcon(productLine);
             
             return (
               <div 
@@ -120,7 +129,11 @@ export const ProductLines = ({ productLines, onChange, onProductClick, onDuplica
                 style={{ cursor: 'pointer' }}
               >
                 <div className="card-icon" style={{ backgroundColor: iconColor.bg, color: iconColor.text }}>
-                  <IconComponent size={20} />
+                  {iconData.type === 'emoji' ? (
+                    <span style={{ fontSize: '20px' }}>{iconData.value}</span>
+                  ) : (
+                    <iconData.value size={20} />
+                  )}
                 </div>
                 <div className="card-content">
                   <div className="card-title">

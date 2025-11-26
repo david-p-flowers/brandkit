@@ -12,11 +12,20 @@ interface Props {
   onDuplicateTagUpdate?: (originalName: string, newName: string) => void;
 }
 
+const isEmoji = (str: string): boolean => {
+  return /[\u{1F300}-\u{1F9FF}]/u.test(str);
+};
+
 const getContentTypeIcon = (contentType: ContentType) => {
   const defaultIcon = 'FileText';
   const contentTypeIcon = contentType.icon || defaultIcon;
+  
+  if (isEmoji(contentTypeIcon)) {
+    return { type: 'emoji' as const, value: contentTypeIcon };
+  }
+  
   const IconComponent = (LucideIcons as any)[contentTypeIcon] || LucideIcons.FileText;
-  return IconComponent;
+  return { type: 'icon' as const, value: IconComponent };
 };
 
 const getContentTypeColor = (contentType: ContentType, index: number): { bg: string; text: string } => {
@@ -132,7 +141,7 @@ export const ContentTypes = ({ contentTypes, onChange, onContentTypeClick, onDup
       {contentTypes.length > 0 ? (
         <div className="content-type-cards">
           {contentTypes.map((contentType, index) => {
-            const IconComponent = getContentTypeIcon(contentType);
+            const iconData = getContentTypeIcon(contentType);
             const iconColor = getContentTypeColor(contentType, index);
             
             return (
@@ -149,7 +158,11 @@ export const ContentTypes = ({ contentTypes, onChange, onContentTypeClick, onDup
                     color: iconColor.text 
                   }}
                 >
-                  <IconComponent size={20} />
+                  {iconData.type === 'emoji' ? (
+                    <span style={{ fontSize: '20px' }}>{iconData.value}</span>
+                  ) : (
+                    <iconData.value size={20} />
+                  )}
                 </div>
                 <div className="card-content">
                   <div className="card-title">

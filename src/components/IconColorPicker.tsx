@@ -9,6 +9,31 @@ interface IconColorPickerProps {
   onClose: () => void;
 }
 
+type IconType = 'icon' | 'emoji';
+
+// Popular emojis for selection
+const popularEmojis = [
+  '📦', '📦', '🛍️', '🏪', '🚚', '💳',
+  '👥', '👤', '✅', '➕', '⭕', '👤',
+  '📝', '📄', '💻', '🖼️', '🎥', '🎵',
+  '🌍', '📍', '🧭', '🧭', '🗺️',
+  '⚙️', '🔧', '🔨', '🛠️', '🎚️',
+  '📊', '📈', '📉', '📈', '📊',
+  '📧', '💬', '📞', '🔔',
+  '❤️', '⭐', '🔖', '🚩', '🏷️',
+  '🏠', '🏢', '🏭', '🏭', '🏭',
+  '⚡', '💡', '🔥', '💧', '☀️',
+  '☕', '🍴', '🛍️', '🎁', '🎂',
+  '🎮', '🏆', '🏅', '🎖️', '👑',
+  '🔒', '🛡️', '🔑', '👆', '👁️',
+  '🔍', '🔎', '📋', '⚏', '📐',
+  '➕', '➖', '✅', '❌', '⚠️',
+  '➡️', '⬅️', '⬆️', '⬇️', '▶️',
+  '📅', '🕐', '⏱️', '⏱️', '⏰',
+  '💾', '🖥️', '☁️', '💿', '🖥️',
+  '📱', '📱', '💻', '🖥️', '🎧',
+];
+
 // Popular Lucide icons for selection
 const popularIcons = [
   'Package', 'Box', 'ShoppingCart', 'Store', 'Truck', 'CreditCard',
@@ -45,7 +70,11 @@ const colors = [
 ];
 
 export const IconColorPicker = ({ currentIcon, currentColor, onIconChange, onColorChange, onClose }: IconColorPickerProps) => {
+  // Determine if current selection is an emoji or icon
+  const isCurrentEmoji = currentIcon && !popularIcons.includes(currentIcon) && /[\u{1F300}-\u{1F9FF}]/u.test(currentIcon);
+  const [iconType, setIconType] = useState<IconType>(isCurrentEmoji ? 'emoji' : 'icon');
   const [selectedIcon, setSelectedIcon] = useState(currentIcon || 'Package');
+  const [selectedEmoji, setSelectedEmoji] = useState(isCurrentEmoji ? currentIcon : '📦');
   const [selectedColor, setSelectedColor] = useState(currentColor || colors[2].value);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -53,9 +82,20 @@ export const IconColorPicker = ({ currentIcon, currentColor, onIconChange, onCol
     iconName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const filteredEmojis = popularEmojis.filter(emoji =>
+    emoji.includes(searchQuery) || searchQuery === ''
+  );
+
   const handleIconSelect = (iconName: string) => {
     setSelectedIcon(iconName);
+    setIconType('icon');
     onIconChange(iconName);
+  };
+
+  const handleEmojiSelect = (emoji: string) => {
+    setSelectedEmoji(emoji);
+    setIconType('emoji');
+    onIconChange(emoji);
   };
 
   const handleColorSelect = (colorValue: string) => {
@@ -63,7 +103,9 @@ export const IconColorPicker = ({ currentIcon, currentColor, onIconChange, onCol
     onColorChange(colorValue);
   };
 
-  const IconComponent = (LucideIcons as any)[selectedIcon] || LucideIcons.Package;
+  const IconComponent = iconType === 'icon' 
+    ? ((LucideIcons as any)[selectedIcon] || LucideIcons.Package)
+    : null;
 
   return (
     <div className="icon-color-picker-overlay" onClick={onClose}>
@@ -85,10 +127,16 @@ export const IconColorPicker = ({ currentIcon, currentColor, onIconChange, onCol
                 color: selectedColor,
               }}
             >
-              <IconComponent size={24} />
+              {iconType === 'emoji' ? (
+                <span style={{ fontSize: '24px' }}>{selectedEmoji}</span>
+              ) : (
+                IconComponent && <IconComponent size={24} />
+              )}
             </div>
             <div className="icon-preview-info">
-              <div className="icon-preview-name">{selectedIcon}</div>
+              <div className="icon-preview-name">
+                {iconType === 'emoji' ? selectedEmoji : selectedIcon}
+              </div>
               <div className="icon-preview-color" style={{ color: selectedColor }}>
                 {colors.find(c => c.value === selectedColor)?.name || 'Custom'}
               </div>
@@ -123,34 +171,67 @@ export const IconColorPicker = ({ currentIcon, currentColor, onIconChange, onCol
             </div>
           </div>
 
-          {/* Icon Grid */}
+          {/* Icon/Emoji Selection */}
           <div className="icon-color-picker-section">
-            <label className="icon-color-picker-label">Icon</label>
+            <div className="icon-type-tabs">
+              <button
+                type="button"
+                className={`icon-type-tab ${iconType === 'icon' ? 'active' : ''}`}
+                onClick={() => setIconType('icon')}
+              >
+                Icon
+              </button>
+              <button
+                type="button"
+                className={`icon-type-tab ${iconType === 'emoji' ? 'active' : ''}`}
+                onClick={() => setIconType('emoji')}
+              >
+                Emoji
+              </button>
+            </div>
+            
             <div className="icon-search">
               <input
                 type="text"
-                placeholder="Search icons"
+                placeholder={iconType === 'emoji' ? 'Search emojis' : 'Search icons'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="icon-search-input"
               />
             </div>
-            <div className="icon-grid">
-              {filteredIcons.map((iconName) => {
-                const Icon = (LucideIcons as any)[iconName] || LucideIcons.Package;
-                return (
+            
+            {iconType === 'icon' ? (
+              <div className="icon-grid">
+                {filteredIcons.map((iconName) => {
+                  const Icon = (LucideIcons as any)[iconName] || LucideIcons.Package;
+                  return (
+                    <button
+                      key={iconName}
+                      type="button"
+                      className={`icon-grid-item ${selectedIcon === iconName && iconType === 'icon' ? 'selected' : ''}`}
+                      onClick={() => handleIconSelect(iconName)}
+                      title={iconName}
+                    >
+                      <Icon size={20} />
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="emoji-grid">
+                {filteredEmojis.map((emoji, index) => (
                   <button
-                    key={iconName}
+                    key={`${emoji}-${index}`}
                     type="button"
-                    className={`icon-grid-item ${selectedIcon === iconName ? 'selected' : ''}`}
-                    onClick={() => handleIconSelect(iconName)}
-                    title={iconName}
+                    className={`emoji-grid-item ${selectedEmoji === emoji && iconType === 'emoji' ? 'selected' : ''}`}
+                    onClick={() => handleEmojiSelect(emoji)}
+                    title={emoji}
                   >
-                    <Icon size={20} />
+                    <span style={{ fontSize: '20px' }}>{emoji}</span>
                   </button>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
