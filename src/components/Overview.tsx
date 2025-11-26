@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { BrandKitSchema } from '../types';
-import { Package, FileText, Users, Globe, Sparkles, Pencil, Upload, X } from 'lucide-react';
+import { Package, FileText, Users, Globe, Sparkles, Pencil, X } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
