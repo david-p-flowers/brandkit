@@ -22,10 +22,10 @@ export const loadFromLocalStorage = (): BrandKitSchema | null => {
           parsed.brandFoundations.brandStoryAndPurpose = '';
         }
         if (!('enableRegions' in parsed.brandFoundations)) {
-          parsed.brandFoundations.enableRegions = true;
+          parsed.brandFoundations.enableRegions = false;
         }
         if (!('enableAudiences' in parsed.brandFoundations)) {
-          parsed.brandFoundations.enableAudiences = true;
+          parsed.brandFoundations.enableAudiences = false;
         }
       }
       
@@ -46,8 +46,8 @@ export const getEmptySchema = (): BrandKitSchema => ({
     brandStoryAndPurpose: '',
     brandToneAndVoice: '',
     writingRules: [],
-    enableRegions: true,
-    enableAudiences: true,
+    enableRegions: false,
+    enableAudiences: false,
   },
   productLines: [],
   contentTypes: [],

@@ -8,6 +8,8 @@ export const getRipplingData = (): BrandKitSchema => {
       "aboutYourBrand": "Rippling is the all-in-one workforce management platform that unifies HR, IT, and Finance in a single system. Built for modern businesses, Rippling automates employee onboarding, payroll, benefits, device management, and expense tracking—all from one platform. With Rippling, companies can manage their entire workforce operations without juggling multiple tools or complex integrations.",
       "brandStoryAndPurpose": "Rippling was founded to solve a fundamental problem: managing a workforce shouldn't require dozens of disconnected tools. We believe that HR, IT, and Finance operations should work together seamlessly, sharing data and automating workflows. Our platform eliminates the friction between departments, reduces administrative burden, and empowers businesses to focus on what matters most—growing their team and their business.",
       "brandToneAndVoice": "Rippling's voice is clear, confident, and practical. We speak directly to business owners, HR professionals, and IT administrators who are tired of managing multiple systems. Our tone is solution-oriented and straightforward—we explain complex workforce management concepts in simple terms. We lead with benefits and outcomes, showing how Rippling saves time, reduces costs, and eliminates administrative headaches. We're honest about what we do well and transparent about how we're different from competitors.",
+      "enableAudiences": false,
+      "enableRegions": false,
       "writingRules": [
         {
           "id": "wr-rippling-001",
