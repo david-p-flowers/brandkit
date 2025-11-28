@@ -109,7 +109,7 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions, enableRe
             onClick={() => setShowIconColorPicker(true)}
             style={{ backgroundColor: iconColorBg, color: productColor }}
           >
-            <IconComponent size={24} />
+            <IconComponent size={16} />
           </button>
           <input
             type="text"
