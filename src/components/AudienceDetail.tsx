@@ -129,7 +129,7 @@ export const AudienceDetail = ({ audience, index, onChange, onBack, globalWritin
             onClick={() => setShowIconColorPicker(true)}
             style={{ backgroundColor: iconColorBg, color: audienceColor }}
           >
-            <IconComponent size={24} />
+            <IconComponent size={16} />
           </button>
           <input
             type="text"

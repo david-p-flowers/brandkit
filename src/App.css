@@ -2941,9 +2941,9 @@ body {
 }
 
 .audience-icon-large-button {
-  width: 64px;
-  height: 64px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3205,9 +3205,9 @@ body {
 }
 
 .content-type-icon-large-button {
-  width: 64px;
-  height: 64px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4208,7 +4208,7 @@ body {
 }
 
 .overview-section-title-large {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -4965,7 +4965,7 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 4rem;
+    font-size: 2.5rem;
   }
 
   .overview-section-count-large {
@@ -5000,7 +5000,7 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 3.5rem;
+    font-size: 2.25rem;
   }
 
   .overview-section-count-large {
@@ -5015,7 +5015,7 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 2.75rem;
+    font-size: 1.875rem;
   }
 
   .overview-section-count-large {
@@ -5060,7 +5060,7 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
   }
 
   .overview-section-count-large {
@@ -5112,7 +5112,7 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .overview-section-count-large {
@@ -5126,7 +5126,7 @@ body {
   }
 
   .overview-section-title-large {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   .overview-section-count-large {

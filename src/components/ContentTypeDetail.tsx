@@ -140,9 +140,9 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
             style={{ backgroundColor: iconColorBg, color: contentTypeColor }}
           >
             {isEmoji ? (
-              <span style={{ fontSize: '24px' }}>{contentTypeIcon}</span>
+              <span style={{ fontSize: '16px' }}>{contentTypeIcon}</span>
             ) : (
-              <IconComponent size={24} />
+              <IconComponent size={16} />
             )}
           </button>
           <input
