@@ -388,8 +388,7 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
           <div className="overview-section-left">
             <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">
-              <span className="overview-title-line">About</span>
-              <span className="overview-title-line">Your Brand</span>
+              About Your Brand
             </h2>
             <div className="overview-section-label">Brand Foundations</div>
           </div>
@@ -437,8 +436,7 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
           <div className="overview-section-left">
             <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">
-              <span className="overview-title-line">Brand Voice</span>
-              <span className="overview-title-line">& Tone</span>
+              Brand Voice & Tone
             </h2>
             <div className="overview-section-label">Brand Foundations</div>
           </div>
@@ -689,8 +687,7 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
           <div className="overview-section-left">
             <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">
-              <span className="overview-title-line">Writing</span>
-              <span className="overview-title-line">Rules</span>
+              Writing Rules
             </h2>
             <div className="overview-section-label">Global Rules</div>
             <Sparkles size={32} className="overview-sparkle-icon-large" />
