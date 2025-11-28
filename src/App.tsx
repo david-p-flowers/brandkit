@@ -57,6 +57,15 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const isInitialMount = useRef(true);
 
+  // Update document title based on selected version
+  useEffect(() => {
+    if (selectedVersion === 'Default') {
+      document.title = 'Brand Kit';
+    } else {
+      document.title = `Brand Kit - ${selectedVersion}`;
+    }
+  }, [selectedVersion]);
+
   const handleClearStorage = () => {
     clearLocalStorage();
     setData(getEmptySchema());
