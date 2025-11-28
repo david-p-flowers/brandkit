@@ -19,6 +19,8 @@ export interface BrandFoundations {
   brandStoryAndPurpose: string;
   brandToneAndVoice: string;
   writingRules: WritingRule[];
+  enableRegions?: boolean; // Enable/disable regions feature
+  enableAudiences?: boolean; // Enable/disable audiences feature
 }
 
 export interface Competitor {

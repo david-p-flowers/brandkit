@@ -9,9 +9,10 @@ interface Props {
   onChange: (productLine: ProductLine) => void;
   onBack: () => void;
   regions: Region[];
+  enableRegions?: boolean;
 }
 
-export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props) => {
+export const ProductDetail = ({ productLine, onChange, onBack, regions, enableRegions = true }: Props) => {
   const [showAddCompetitorModal, setShowAddCompetitorModal] = useState(false);
   const [showIconColorPicker, setShowIconColorPicker] = useState(false);
 
@@ -183,7 +184,7 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props)
               <div className="competitors-table-header">
                 <div className="competitor-col-name">Competitor</div>
                 <div className="competitor-col-domain">Domain</div>
-                <div className="competitor-col-region">Region</div>
+                {enableRegions && <div className="competitor-col-region">Region</div>}
                 <div className="competitor-col-actions"></div>
               </div>
               {productLine.competitors.map((competitor, compIndex) => (
@@ -219,33 +220,35 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions }: Props)
                       className="competitor-input"
                     />
                   </div>
-                  <div className="competitor-col-region">
-                    <div className="region-tags">
-                      {competitor.regions.map((region, regionIndex) => (
-                        <span key={regionIndex} className="region-tag">
-                          {region}
-                          <button
-                            type="button"
-                            onClick={() => removeRegionFromCompetitor(compIndex, region)}
-                            className="region-tag-remove"
-                          >
-                            ×
-                          </button>
-                        </span>
-                      ))}
-                      <input
-                        type="text"
-                        placeholder="Add region"
-                        className="region-input"
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && e.currentTarget.value.trim()) {
-                            addRegionToCompetitor(compIndex, e.currentTarget.value.trim());
-                            e.currentTarget.value = '';
-                          }
-                        }}
-                      />
+                  {enableRegions && (
+                    <div className="competitor-col-region">
+                      <div className="region-tags">
+                        {competitor.regions.map((region, regionIndex) => (
+                          <span key={regionIndex} className="region-tag">
+                            {region}
+                            <button
+                              type="button"
+                              onClick={() => removeRegionFromCompetitor(compIndex, region)}
+                              className="region-tag-remove"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                        <input
+                          type="text"
+                          placeholder="Add region"
+                          className="region-input"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                              addRegionToCompetitor(compIndex, e.currentTarget.value.trim());
+                              e.currentTarget.value = '';
+                            }
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="competitor-col-actions">
                     <button
                       type="button"

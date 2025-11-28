@@ -15,9 +15,10 @@ interface Props {
   onRegionClick: (index: number) => void;
   onNavigateToTab?: (tab: string) => void;
   onViewAllRules?: () => void;
+  onStartOnboarding?: () => void;
 }
 
-export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab, onViewAllRules }: Props) => {
+export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, onAudienceClick, onRegionClick, onNavigateToTab, onViewAllRules, onStartOnboarding }: Props) => {
   const [headerImageUrl, setHeaderImageUrl] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
@@ -245,11 +246,11 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
               <p className="overview-brand-description">
                 Welcome to your brand kit. This is where your brand story comes to life.
               </p>
-              {onNavigateToTab && (
+              {onStartOnboarding && (
                 <button
                   type="button"
                   className="btn-primary overview-create-brand-kit-button"
-                  onClick={() => onNavigateToTab('brand-foundations')}
+                  onClick={() => onStartOnboarding()}
                 >
                   Create brand kit
                 </button>
@@ -352,11 +353,11 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
           </div>
           <div className="overview-hero-divider"></div>
           <div className="overview-hero-right">
-            {!data.brandFoundations?.brandName && onNavigateToTab && (
+            {!data.brandFoundations?.brandName && onStartOnboarding && (
               <button
                 type="button"
                 className="btn-primary overview-create-brand-kit-button"
-                onClick={() => onNavigateToTab('brand-foundations')}
+                onClick={() => onStartOnboarding()}
               >
                 Create brand kit
               </button>

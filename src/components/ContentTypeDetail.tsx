@@ -3,7 +3,7 @@ import type { ContentType, WritingRule, Sample } from '../types';
 import { AddSampleModal } from './AddSampleModal';
 import { MarkdownEditor } from './MarkdownEditor';
 import { IconColorPicker } from './IconColorPicker';
-import { X } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 
 interface Props {
@@ -181,12 +181,6 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
                   return '📝'; // Text icon for plain text
                 };
 
-                const getSampleType = () => {
-                  if (sample.notes && sample.notes.includes('upload')) return 'Upload';
-                  if (sample.body && sample.body.startsWith('http')) return 'URL';
-                  return 'Plain Text';
-                };
-
                 return (
                   <div key={sampleIndex} className="sample-card">
                     <div className="sample-card-icon">{getSampleIcon()}</div>
@@ -198,22 +192,14 @@ export const ContentTypeDetail = ({ contentType, onChange, onBack, globalWriting
                         placeholder="Sample name"
                         className="sample-card-name"
                       />
-                      <input
-                        type="text"
-                        value={sample.body}
-                        onChange={(e) => updateSample(sampleIndex, { ...sample, body: e.target.value })}
-                        placeholder={getSampleType() === 'URL' ? 'https://example.com' : getSampleType() === 'Plain Text' ? 'Sample text...' : 'File name'}
-                        className="sample-card-url"
-                      />
-                      <div className="sample-card-type">{getSampleType()}</div>
                     </div>
                     <button
                       type="button"
                       onClick={() => removeSample(sampleIndex)}
-                      className="sample-card-remove"
-                      title="Remove sample"
+                      className="sample-card-menu"
+                      title="More options"
                     >
-                      <X size={16} />
+                      <MoreVertical size={12} />
                     </button>
                   </div>
                 );

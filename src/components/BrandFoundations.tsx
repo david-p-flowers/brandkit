@@ -108,35 +108,6 @@ export const BrandFoundations = ({ data, onChange, audiences, contentTypes, regi
 
   return (
     <div className="brand-foundations">
-      {/* Brand Name and Domain */}
-      <div className="field-group">
-        <div className="field">
-          <label>
-            Brand Name
-            <span className="info-icon" title="Add your brand name">ℹ️</span>
-          </label>
-          <input
-            type="text"
-            value={data.brandName}
-            onChange={(e) => updateField('brandName', e.target.value)}
-            placeholder="Add your brand name."
-          />
-        </div>
-
-        <div className="field">
-          <label>
-            Brand Domain
-            <span className="info-icon" title="URL of your brand website">ℹ️</span>
-          </label>
-          <input
-            type="text"
-            value={data.brandDomain}
-            onChange={(e) => updateField('brandDomain', e.target.value)}
-            placeholder="URL of your brand website."
-          />
-        </div>
-      </div>
-
       {/* About Your Brand */}
       <div className="section-card">
         <div className="section-header">

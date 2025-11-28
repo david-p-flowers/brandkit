@@ -16,9 +16,17 @@ export const loadFromLocalStorage = (): BrandKitSchema | null => {
     if (stored) {
       const parsed = JSON.parse(stored) as any;
       
-      // Ensure backward compatibility - add missing brandStoryAndPurpose field if it doesn't exist
-      if (parsed.brandFoundations && !('brandStoryAndPurpose' in parsed.brandFoundations)) {
-        parsed.brandFoundations.brandStoryAndPurpose = '';
+      // Ensure backward compatibility - add missing fields if they don't exist
+      if (parsed.brandFoundations) {
+        if (!('brandStoryAndPurpose' in parsed.brandFoundations)) {
+          parsed.brandFoundations.brandStoryAndPurpose = '';
+        }
+        if (!('enableRegions' in parsed.brandFoundations)) {
+          parsed.brandFoundations.enableRegions = true;
+        }
+        if (!('enableAudiences' in parsed.brandFoundations)) {
+          parsed.brandFoundations.enableAudiences = true;
+        }
       }
       
       return parsed as BrandKitSchema;
@@ -38,6 +46,8 @@ export const getEmptySchema = (): BrandKitSchema => ({
     brandStoryAndPurpose: '',
     brandToneAndVoice: '',
     writingRules: [],
+    enableRegions: true,
+    enableAudiences: true,
   },
   productLines: [],
   contentTypes: [],

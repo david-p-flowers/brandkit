@@ -6,9 +6,11 @@ interface SidebarProps {
   onClearStorage?: () => void;
   selectedVersion?: string;
   onVersionChange?: (version: string) => void;
+  onSettingsClick?: () => void;
+  onBrandKitClick?: () => void;
 }
 
-export const Sidebar = ({ activeSection = 'brand-kit', onClearStorage, selectedVersion = 'Default', onVersionChange }: SidebarProps) => {
+export const Sidebar = ({ activeSection = 'brand-kit', onClearStorage, selectedVersion = 'Default', onVersionChange, onSettingsClick, onBrandKitClick }: SidebarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -156,7 +158,16 @@ export const Sidebar = ({ activeSection = 'brand-kit', onClearStorage, selectedV
 
         <div className="nav-section">
           <div className="nav-section-header">Context</div>
-          <a href="#" className={`nav-item ${activeSection === 'brand-kit' ? 'active' : ''}`}>
+          <a 
+            href="#" 
+            className={`nav-item ${activeSection === 'brand-kit' ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              if (onBrandKitClick) {
+                onBrandKitClick();
+              }
+            }}
+          >
             <span className="nav-icon">💼</span>
             <span>Brand Kit</span>
           </a>
@@ -168,7 +179,16 @@ export const Sidebar = ({ activeSection = 'brand-kit', onClearStorage, selectedV
       </nav>
 
       <div className="sidebar-footer">
-        <a href="#" className="nav-item">
+        <a 
+          href="#" 
+          className={`nav-item ${activeSection === 'settings' ? 'active' : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            if (onSettingsClick) {
+              onSettingsClick();
+            }
+          }}
+        >
           <span className="nav-icon">⚙️</span>
           <span>Settings</span>
         </a>

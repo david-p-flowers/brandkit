@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { BrandKitSchema, ProductLine } from './types';
 import { saveToLocalStorage, loadFromLocalStorage, getEmptySchema, clearLocalStorage } from './utils/storage';
 import { getKlaviyoData } from './utils/klaviyoData';
@@ -17,12 +17,24 @@ import { AudienceDetail } from './components/AudienceDetail';
 import { Regions } from './components/Regions';
 import { RegionDetail } from './components/RegionDetail';
 import { AllWritingRules } from './components/AllWritingRules';
+import { Settings } from './components/Settings';
+import { Onboarding } from './components/Onboarding';
 import { ChevronDown } from 'lucide-react';
 import './App.css';
 
 function App() {
   const [data, setData] = useState<BrandKitSchema>(getEmptySchema());
   const [activeTab, setActiveTab] = useState('overview');
+
+  // If the current tab is hidden due to settings, switch to overview
+  React.useEffect(() => {
+    if (activeTab === 'regions' && !(data.brandFoundations.enableRegions ?? true)) {
+      setActiveTab('overview');
+    }
+    if (activeTab === 'audiences' && !(data.brandFoundations.enableAudiences ?? true)) {
+      setActiveTab('overview');
+    }
+  }, [data.brandFoundations.enableRegions, data.brandFoundations.enableAudiences, activeTab]);
   const [selectedProductIndex, setSelectedProductIndex] = useState<number | null>(null);
   const [selectedAudienceIndex, setSelectedAudienceIndex] = useState<number | null>(null);
   const [selectedContentTypeIndex, setSelectedContentTypeIndex] = useState<number | null>(null);
@@ -41,6 +53,8 @@ function App() {
 
   const [selectedVersion, setSelectedVersion] = useState<string>(getInitialVersion());
   const [showAllWritingRules, setShowAllWritingRules] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const isInitialMount = useRef(true);
 
   const handleClearStorage = () => {
@@ -363,6 +377,7 @@ function App() {
               setActiveTab(tab);
             }}
             onViewAllRules={() => setShowAllWritingRules(true)}
+            onStartOnboarding={() => setShowOnboarding(true)}
           />
         );
       case 'brand-foundations':
@@ -417,6 +432,48 @@ function App() {
     }
   };
 
+  // If showing onboarding, show the onboarding flow
+  if (showOnboarding) {
+    return (
+      <Onboarding
+        onComplete={(onboardingData) => {
+          // Save the onboarding data to the default version
+          setData(onboardingData);
+          setSelectedVersion('Default');
+          // Save to localStorage
+          saveToLocalStorage(onboardingData);
+          // Close onboarding and show overview
+          setShowOnboarding(false);
+          setActiveTab('overview');
+        }}
+        onCancel={() => setShowOnboarding(false)}
+      />
+    );
+  }
+
+  // If showing settings, show the settings page
+  if (showSettings) {
+    return (
+      <div className="app">
+        <Sidebar 
+          activeSection="settings" 
+          onClearStorage={handleClearStorage}
+          selectedVersion={selectedVersion}
+          onVersionChange={handleVersionChange}
+          onSettingsClick={() => setShowSettings(true)}
+          onBrandKitClick={() => setShowSettings(false)}
+        />
+        <main className="main-content">
+          <Settings 
+            onBack={() => setShowSettings(false)}
+            data={data}
+            onChange={setData}
+          />
+        </main>
+      </div>
+    );
+  }
+
   // If showing all writing rules, show the full-page view
   if (showAllWritingRules) {
     return (
@@ -426,6 +483,8 @@ function App() {
           onClearStorage={handleClearStorage}
           selectedVersion={selectedVersion}
           onVersionChange={handleVersionChange}
+          onSettingsClick={() => setShowSettings(true)}
+          onBrandKitClick={() => setShowSettings(false)}
         />
         <main className="main-content">
           <AllWritingRules
@@ -453,6 +512,8 @@ function App() {
           onClearStorage={handleClearStorage}
           selectedVersion={selectedVersion}
           onVersionChange={handleVersionChange}
+          onSettingsClick={() => setShowSettings(true)}
+          onBrandKitClick={() => setShowSettings(false)}
         />
         <main className="main-content">
           <ProductDetail
@@ -460,6 +521,7 @@ function App() {
             onChange={handleProductChange}
             onBack={() => setSelectedProductIndex(null)}
             regions={data.regions}
+            enableRegions={data.brandFoundations.enableRegions ?? true}
           />
         </main>
       </div>
@@ -481,6 +543,8 @@ function App() {
           onClearStorage={handleClearStorage}
           selectedVersion={selectedVersion}
           onVersionChange={handleVersionChange}
+          onSettingsClick={() => setShowSettings(true)}
+          onBrandKitClick={() => setShowSettings(false)}
         />
         <main className="main-content">
           <AudienceDetail
@@ -515,6 +579,8 @@ function App() {
           onClearStorage={handleClearStorage}
           selectedVersion={selectedVersion}
           onVersionChange={handleVersionChange}
+          onSettingsClick={() => setShowSettings(true)}
+          onBrandKitClick={() => setShowSettings(false)}
         />
         <main className="main-content">
           <ContentTypeDetail
@@ -545,6 +611,8 @@ function App() {
           onClearStorage={handleClearStorage}
           selectedVersion={selectedVersion}
           onVersionChange={handleVersionChange}
+          onSettingsClick={() => setShowSettings(true)}
+          onBrandKitClick={() => setShowSettings(false)}
         />
         <main className="main-content">
           <RegionDetail
@@ -570,6 +638,8 @@ function App() {
         onClearStorage={handleClearStorage}
         selectedVersion={selectedVersion}
         onVersionChange={handleVersionChange}
+        onSettingsClick={() => setShowSettings(true)}
+        onBrandKitClick={() => setShowSettings(false)}
       />
       <main className="main-content">
         <div className="content-header">
@@ -579,7 +649,12 @@ function App() {
             onVersionChange={handleVersionChange} 
           />
         </div>
-        <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        <TabNavigation 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab}
+          enableRegions={data.brandFoundations.enableRegions ?? true}
+          enableAudiences={data.brandFoundations.enableAudiences ?? true}
+        />
         <div className="content-body">
           {renderActiveTab()}
         </div>
