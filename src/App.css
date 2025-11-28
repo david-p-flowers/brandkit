@@ -509,8 +509,11 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   padding: 16px;
-  border-bottom: 1px solid var(--color-stroke-primary);
   gap: 16px;
+}
+
+.brand-foundations .section-header {
+  border-bottom: 1px solid var(--color-stroke-primary);
 }
 
 .section h3,
