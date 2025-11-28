@@ -191,6 +191,22 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
   const secondaryColor = brandColors?.secondary || '#676c79';
   const accentColor = brandColors?.accent || '#6e6eff';
 
+  // Calculate which sections will be shown to determine section numbers
+  const showAboutBrand = !!data.brandFoundations?.aboutYourBrand;
+  const showBrandVoice = !!data.brandFoundations?.brandToneAndVoice;
+  const showProducts = (data.productLines?.length || 0) > 0;
+  const showAudiences = (data.brandFoundations?.enableAudiences ?? true);
+  const showContentTypes = (data.contentTypes?.length || 0) > 0;
+  const showRegions = (data.regions?.length || 0) > 0 && (data.brandFoundations?.enableRegions ?? true);
+  const showWritingRules = featuredRules.length > 0;
+
+  // Calculate section numbers based on which sections are shown
+  let sectionNum = 0;
+  const getSectionNumber = () => {
+    sectionNum++;
+    return String(sectionNum).padStart(2, '0');
+  };
+
   if (!data || !data.brandFoundations) {
     // Default header image for empty state - using Figma design
     const defaultHeaderImage = '/LinkedIn cover - 32.png';
@@ -367,10 +383,10 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
       </div>
 
       {/* About Your Brand */}
-      {data.brandFoundations?.aboutYourBrand && (
+      {showAboutBrand && (
         <div className="overview-section-split overview-section-01">
           <div className="overview-section-left">
-            <div className="overview-section-number">01</div>
+            <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">
               <span className="overview-title-line">About</span>
               <span className="overview-title-line">Your Brand</span>
@@ -416,10 +432,10 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
       )}
 
       {/* Brand Voice & Tone */}
-      {data.brandFoundations?.brandToneAndVoice && (
+      {showBrandVoice && (
         <div className="overview-section-split overview-section-02">
           <div className="overview-section-left">
-            <div className="overview-section-number">02</div>
+            <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">
               <span className="overview-title-line">Brand Voice</span>
               <span className="overview-title-line">& Tone</span>
@@ -465,10 +481,10 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
       )}
 
       {/* Products Showcase */}
-      {(data.productLines?.length || 0) > 0 && (
+      {showProducts && (
         <div className="overview-section-split overview-section-03">
           <div className="overview-section-left">
-            <div className="overview-section-number">03</div>
+            <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">Products</h2>
             <div className="overview-section-meta">
               <div className="overview-section-label">Product Lines</div>
@@ -518,10 +534,10 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
       )}
 
       {/* Audiences - Full Width */}
-      {(data.audiences?.length || 0) > 0 && (
+      {showAudiences && (
         <div className="overview-section-split overview-section-04">
           <div className="overview-section-left">
-            <div className="overview-section-number">04</div>
+            <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">Audiences</h2>
             <div className="overview-section-meta">
               <div className="overview-section-label">Audience</div>
@@ -529,52 +545,58 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
           </div>
           <div className="overview-section-divider"></div>
           <div className="overview-section-right">
-            <div className="overview-entities-grid-compact">
-              {data.audiences.slice(0, 5).map((audience, index) => {
-                const color = getEntityColor('audience', audience);
-                const bgColor = `${color}1A`;
-                return (
-                  <div
-                    key={index}
-                    className="overview-entity-card-compact"
-                    onClick={() => onAudienceClick(index)}
-                    style={{
-                      '--entity-color': color,
-                      '--entity-bg': bgColor,
-                    } as React.CSSProperties}
-                  >
-                    <div className="overview-entity-icon-compact" style={{ backgroundColor: bgColor, color }}>
-                      {getEntityIcon('audience', audience)}
+            {(data.audiences?.length || 0) > 0 ? (
+              <div className="overview-entities-grid-compact">
+                {data.audiences.slice(0, 5).map((audience, index) => {
+                  const color = getEntityColor('audience', audience);
+                  const bgColor = `${color}1A`;
+                  return (
+                    <div
+                      key={index}
+                      className="overview-entity-card-compact"
+                      onClick={() => onAudienceClick(index)}
+                      style={{
+                        '--entity-color': color,
+                        '--entity-bg': bgColor,
+                      } as React.CSSProperties}
+                    >
+                      <div className="overview-entity-icon-compact" style={{ backgroundColor: bgColor, color }}>
+                        {getEntityIcon('audience', audience)}
+                      </div>
+                      <h3 className="overview-entity-name-compact">{audience.name || 'Unnamed Audience'}</h3>
                     </div>
-                    <h3 className="overview-entity-name-compact">{audience.name || 'Unnamed Audience'}</h3>
+                  );
+                })}
+                {data.audiences.length > 5 && (
+                  <div
+                    className="overview-entity-card-compact overview-view-all-card"
+                    onClick={() => {
+                      if (onNavigateToTab) {
+                        onNavigateToTab('audiences');
+                      }
+                    }}
+                  >
+                    <div className="overview-view-all-content">
+                      <span className="overview-view-all-text">View all audiences</span>
+                      <span className="overview-view-all-arrow">→</span>
+                    </div>
                   </div>
-                );
-              })}
-              {data.audiences.length > 5 && (
-                <div
-                  className="overview-entity-card-compact overview-view-all-card"
-                  onClick={() => {
-                    if (onNavigateToTab) {
-                      onNavigateToTab('audiences');
-                    }
-                  }}
-                >
-                  <div className="overview-view-all-content">
-                    <span className="overview-view-all-text">View all audiences</span>
-                    <span className="overview-view-all-arrow">→</span>
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            ) : (
+              <div className="overview-empty-state">
+                <p>No audiences yet.</p>
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {/* Content Types */}
-      {(data.contentTypes?.length || 0) > 0 && (
+      {showContentTypes && (
         <div className="overview-section-split overview-section-05">
           <div className="overview-section-left">
-            <div className="overview-section-number">05</div>
+            <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">Content Types</h2>
             <div className="overview-section-meta">
               <div className="overview-section-label">Content Types</div>
@@ -624,10 +646,10 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
       )}
 
       {/* Regions - Full Width */}
-      {(data.regions?.length || 0) > 0 && (
+      {showRegions && (
         <div className="overview-section-split overview-section-06">
           <div className="overview-section-left">
-            <div className="overview-section-number">06</div>
+            <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">Regions</h2>
             <div className="overview-section-meta">
               <div className="overview-section-label">Regions</div>
@@ -662,10 +684,10 @@ export const Overview = ({ data, onChange, onProductClick, onContentTypeClick, o
       )}
 
       {/* Writing Rules Typography - Split Layout */}
-      {featuredRules.length > 0 && (
+      {showWritingRules && (
         <div className="overview-section-split overview-section-07">
           <div className="overview-section-left">
-            <div className="overview-section-number">07</div>
+            <div className="overview-section-number">{getSectionNumber()}</div>
             <h2 className="overview-section-title-large">
               <span className="overview-title-line">Writing</span>
               <span className="overview-title-line">Rules</span>
