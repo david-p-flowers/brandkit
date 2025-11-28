@@ -522,6 +522,7 @@ function App() {
             onBack={() => setSelectedProductIndex(null)}
             regions={data.regions}
             enableRegions={data.brandFoundations.enableRegions ?? true}
+            onNavigateToSettings={() => setShowSettings(true)}
           />
         </main>
       </div>

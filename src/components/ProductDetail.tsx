@@ -3,6 +3,7 @@ import type { ProductLine, Competitor, Region } from '../types';
 import { AddCompetitorModal } from './AddCompetitorModal';
 import { IconColorPicker } from './IconColorPicker';
 import * as LucideIcons from 'lucide-react';
+import { Lightbulb, X } from 'lucide-react';
 
 interface Props {
   productLine: ProductLine;
@@ -10,11 +11,13 @@ interface Props {
   onBack: () => void;
   regions: Region[];
   enableRegions?: boolean;
+  onNavigateToSettings?: () => void;
 }
 
-export const ProductDetail = ({ productLine, onChange, onBack, regions, enableRegions = true }: Props) => {
+export const ProductDetail = ({ productLine, onChange, onBack, regions, enableRegions = true, onNavigateToSettings }: Props) => {
   const [showAddCompetitorModal, setShowAddCompetitorModal] = useState(false);
   const [showIconColorPicker, setShowIconColorPicker] = useState(false);
+  const [showRecommendationBanner, setShowRecommendationBanner] = useState(true);
 
   const updateField = (field: keyof ProductLine, value: any) => {
     onChange({ ...productLine, [field]: value });
@@ -117,6 +120,37 @@ export const ProductDetail = ({ productLine, onChange, onBack, regions, enableRe
           />
         </div>
       </div>
+
+      {!enableRegions && showRecommendationBanner && (
+        <div className="recommendation-banner">
+          <div className="recommendation-banner-content">
+            <Lightbulb size={20} className="recommendation-icon" />
+            <span className="recommendation-label">Recommendation</span>
+            <span className="recommendation-message">
+              Add regions in order to tailor your product messaging to particular locals.
+            </span>
+          </div>
+          <div className="recommendation-banner-actions">
+            {onNavigateToSettings && (
+              <button
+                type="button"
+                className="recommendation-add-button"
+                onClick={onNavigateToSettings}
+              >
+                + Add Regions
+              </button>
+            )}
+            <button
+              type="button"
+              className="recommendation-close-button"
+              onClick={() => setShowRecommendationBanner(false)}
+              aria-label="Dismiss recommendation"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="product-detail-content">
         <div className="detail-section">
