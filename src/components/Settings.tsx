@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeft, User, Globe, Database, CreditCard, Users, Plug, Lock, RefreshCw, BookOpen, Upload } from 'lucide-react';
+import { ArrowLeft, User, Globe, Database, CreditCard, Users, Plug, Lock, RefreshCw, BookOpen } from 'lucide-react';
 import type { BrandKitSchema } from '../types';
 import { IconColorPicker } from './IconColorPicker';
-import * as LucideIcons from 'lucide-react';
 
 interface SettingsProps {
   onBack: () => void;
@@ -40,16 +39,6 @@ export const Settings = ({ onBack, data, onChange }: SettingsProps) => {
     }
   };
 
-  const handleLogoEdit = () => {
-    // Show a menu or modal to choose between icon picker and upload
-    const choice = window.confirm('Choose upload method:\nOK = Upload Image\nCancel = Choose Icon');
-    if (choice) {
-      fileInputRef.current?.click();
-    } else {
-      setShowIconColorPicker(true);
-    }
-  };
-
   const handleIconChange = (icon: string) => {
     updateBrandFoundation('brandIcon', icon);
     setShowIconColorPicker(false);
@@ -58,28 +47,6 @@ export const Settings = ({ onBack, data, onChange }: SettingsProps) => {
   const handleColorChange = () => {
     // For brand icon, we might not need color, but keeping for consistency
     setShowIconColorPicker(false);
-  };
-
-  const getBrandIconDisplay = () => {
-    const icon = data.brandFoundations.brandIcon;
-    if (!icon) return null;
-    
-    if (icon.startsWith('http') || icon.startsWith('data:')) {
-      return <img src={icon} alt="Brand logo" className="settings-brand-icon-img" />;
-    }
-    
-    // Check if it's an emoji
-    if (/[\u{1F300}-\u{1F9FF}]/u.test(icon)) {
-      return <span className="settings-brand-icon-emoji">{icon}</span>;
-    }
-    
-    // It's a Lucide icon name
-    const IconComponent = (LucideIcons as any)[icon];
-    if (IconComponent) {
-      return <IconComponent size={24} />;
-    }
-    
-    return null;
   };
 
   return (
